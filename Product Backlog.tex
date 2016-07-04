@@ -1,0 +1,130 @@
+\documentclass[a4paper,12pt]{report}
+\addtolength{\oddsidemargin}{-1.cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{3.5cm}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\makeindex
+
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage{verbatim}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+
+
+% define the title
+\author{Ambitious Design}
+\title{Product and Sprint Backlog}
+\begin{document}
+\setlength{\parskip}{6pt}
+
+% generates the title
+\begin{titlepage}
+	
+	\begin{center}
+		% Upper part of the page           
+		\textsc{\LARGE Department of Computer Science}\\[1.5cm]
+		\textsc{\Large COS 301 - Main Project}\\[0.5cm]
+		% Title
+		\HRule \\[0.4cm]
+		{ \huge \bfseries Document 1}\\[0.4cm]
+		\HRule \\[0.4cm]
+		% Author and supervisor
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{Author:}\\
+				Tim {Kirker}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{Student number:} \\
+				u11152402
+			\end{flushright}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Stephen {Swanepoel}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				u11032091
+			\end{flushright}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				Dian {Veldsman}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				u12081095
+			\end{flushright}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				Killian {Kieck}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				u12252213
+			\end{flushright}
+		\end{minipage}
+		
+		
+		{\large \today}
+	\end{center}
+\end{titlepage}
+\footnotesize
+\normalsize
+
+\renewcommand{\thesection}{\arabic{section}}
+\newpage
+\begin{center}
+	\textsc{\LARGE Product and Sprint Backlog}\\[1.5cm]
+\end{center}
+	
+\section{Product Backlog}
+\begin{enumerate}
+	\item Identify a human in an image.  
+	\item Identify objects in an image.
+	\item Security constraints in place when pushing and pulling images to and from the server database.
+	\item Sorting of images into appropriate tables within the database.
+	\item Extend services to perform under a threaded environment / to handle multiple images at once.
+\end{enumerate}
+
+\section{Sprints}
+
+\subsection{Sprint 1}
+\subsubsection{Sprint Backlog}
+\begin{enumerate}
+	\item Identify a human in an image.
+	\item Identify objects in an image.
+\end{enumerate}
+
+\subsection{Sprint 2}
+\subsubsection{Sprint Backlog}
+\begin{enumerate}
+	\item Put security constraints in place when pushing and pulling images to and from the server.
+	\item Sorting of images into appropriate tables within the database.
+\end{enumerate}
+
+\subsection{Sprint 3}
+\subsubsection{Sprint Backlog}
+\begin{itemize}
+	\item Extend services to perform under a threaded environment or to handle multiple images at once.
+\end{itemize}
