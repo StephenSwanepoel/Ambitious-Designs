@@ -52,10 +52,38 @@ final class PeopleDetect {
     // Logger is not a constant
     @SuppressWarnings({ "checkstyle:constantname", "PMD.VariableNamingConventions" })
     private static final Logger logger = Logger.getLogger(PeopleDetect.class.getName());
-    /* Load the OpenCV system library */
+    /** 
+     * Load the OpenCV system library 
+     * Load dynamic library
+     * 
+     */
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         System.load("E:\\Software\\OpenCV\\openCV3.1\\opencv\\build\\java\\x64\\openh264-1.4.0-win64msvc.dll");
+    }
+    
+    //Grey scale image
+    public static Mat greyScale(BufferedImage image, Mat mat){
+    	
+        Mat mat1 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
+        Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
+
+        /*byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int)(mat1.elemSize())];
+        mat1.get(0, 0, data1);
+        BufferedImage image1 = new BufferedImage(mat1.cols(),mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
+        image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);    
+        */
+        Imgcodecs.imwrite("./output/test2.jpg", mat1);
+        return mat1;
+    }
+    
+    //Histogram equalization
+    public static Mat equalization(BufferedImage image, Mat mat){
+    	Mat mat1 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
+        Imgproc.equalizeHist(mat, mat1);
+    	Imgcodecs.imwrite("./output/test3.jpg", mat1);
+        
+    	return mat1;
     }
     
     public static void processImage(String url) throws IOException{
@@ -66,67 +94,62 @@ final class PeopleDetect {
 	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 	        Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
 	        mat.put(0, 0, data);
+	       	        
+	        //mat = greyScale(image, mat);
+	        //mat = equalization(image,mat);
 	        
-	        //Grey scale image
-	        Mat mat1 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
-	        Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
-	
-	        byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int)(mat1.elemSize())];
-	        mat1.get(0, 0, data1);
-	        BufferedImage image1 = new BufferedImage(mat1.cols(),mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
-	        image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
-	  
+	        //Initialise and set hog descriptor to "people detector"
 	        final HOGDescriptor hog = new HOGDescriptor();
 	    	hog.setSVMDetector(HOGDescriptor.getDefaultPeopleDetector());
-	    
+	    	//Initialise variables to identify humans in the image / video 
+	    	//by locating box points to form a rectangle around the detected object
 	    	MatOfRect found = new MatOfRect();
 	    	MatOfDouble weight = new MatOfDouble();
-	    	final Scalar rectColor = new Scalar(0, 255, 0);
-	        final Scalar fontColor = new Scalar(255, 255, 255);
+	    	//Colour of rectangle to be drawn onto image
+	    	final Scalar rectColor = new Scalar(0, 255, 0); 
+	        //final Scalar fontColor = new Scalar(255, 255, 255);
 	        final Point rectPoint1 = new Point();
 	        final Point rectPoint2 = new Point();
 	        final Point fontPoint = new Point();
-	        int framesWithPeople = 0;
 	        final long startTime = System.currentTimeMillis();
 	        
-	    	hog.detectMultiScale(mat1, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.01, 2, false);
-	    	if (found.rows() > 0) {
-                framesWithPeople++;
-                final List<Double> weightList = weight.toList();
-                final List<Rect> rectList = found.toList();
-                int index = 0;
-                for (final Rect rect : rectList) {
-                    rectPoint1.x = rect.x;
-                    rectPoint1.y = rect.y;
-                    rectPoint2.x = rect.x + rect.width;
-                    rectPoint2.y = rect.y + rect.height;
-                    //Draw rectangle around fond object
-                    Imgproc.rectangle(mat1, rectPoint1, rectPoint2, rectColor, 2);
-                    fontPoint.x = rect.x;
-                    //Illustration
-                    fontPoint.y = rect.y - 4;
-                    //Print weight
-                    //Illustration
-                    Imgproc.putText(mat1, String.format("%1.2f", weightList.get(index)), fontPoint,
-                            Core.FONT_HERSHEY_PLAIN, 1.5, fontColor, 2, Core.LINE_AA, false);
-                    index++;
-                }
-            }	 
-	    	
-	    	BufferedImage output = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-	    	output.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
-	    	  	
-	    	Imgcodecs.imwrite("./output/test.jpg", mat1);
+	    	while (true){
+	    		//Detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles
+	    		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.05, 2, false);
+		    	if (found.rows() > 0) {
+		    		logger.log(Level.INFO, "Human Detected!");
+	                final List<Rect> rectList = found.toList();
+	                for (final Rect rect : rectList) {
+	                    rectPoint1.x = rect.x;
+	                    rectPoint1.y = rect.y;
+	                    rectPoint2.x = rect.x + rect.width;
+	                    rectPoint2.y = rect.y + rect.height;
+	                    //Draw rectangle around fond object
+	                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);
+	                    //Imgproc.rectangle(mat1, rectPoint1, rectPoint2, rectColor, 2);
+	                    fontPoint.x = rect.x;
+	                    fontPoint.y = rect.y - 4;
+	                }
+	                
+	                //Create an image file to store the mat object into (Same dimensions as original image)
+			    	BufferedImage output = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+			    	output.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), data);
+			    	//Write the contents of the mat object to the output variable
+			    	Imgcodecs.imwrite("./output/test.jpg", mat);
+	            }
+		    	
+		    	
+		    	break;
+	    	}	    	
 	    	
 	    	final long estimatedTime = System.currentTimeMillis() - startTime;
 	        final double seconds = (double) estimatedTime / 1000;
-	        logger.log(Level.INFO, String.format("%d frames with people", framesWithPeople));
 	        logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds, seconds));
 	        
 	        found.release();
 	        weight.release();
 	        mat.release();
-	        mat1.release();	        
+	        //mat1.release();
 	     
     	} catch (Exception e) {
 	        System.out.println("Error: " + e.getMessage());
@@ -169,7 +192,7 @@ final class PeopleDetect {
         final long startTime = System.currentTimeMillis();
                 
         while (videoCapture.read(mat)) {
-            hog.detectMultiScale(mat, foundLocations, foundWeights, 0.0, winStride, padding, 1.05, 2.0, false);
+            hog.detectMultiScale(mat, foundLocations, foundWeights, 0.0, winStride, padding, 1.025, 2.0, false);
             if (foundLocations.rows() > 0) {
                 framesWithPeople++;
                 final List<Double> weightList = foundWeights.toList();
@@ -223,7 +246,7 @@ final class PeopleDetect {
         // Check how many arguments were passed in
         if (args.length == 0) {
             // If no arguments were passed then default to local file
-        	url = "./resources/trail2.jpg";
+        	url = "./resources/trail1.jpg";
         } else {
         	url = args[0];
         }
