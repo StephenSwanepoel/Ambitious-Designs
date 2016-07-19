@@ -7,18 +7,22 @@
  * Dian Veldsman
  * Killian Kieck
  */
+//Include OpenCV framework
 package com.codeferm.opencv;
-
-import java.awt.image.*;
+//Libraries (general)
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+//Libraries required for logging system events
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import java.nio.*;
+//Library required for read/write operations for images
 import javax.imageio.ImageIO;
-
+//Libraries required for creating BufferedImage instances
+import java.awt.image.*;
+//Libraries required for defining mat objects as well as
+//performing various operations on them
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -30,16 +34,14 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.objdetect.CascadeClassifier;
-import org.opencv.imgproc.Imgproc; //Library to draw shapes etc.
+//import org.opencv.objdetect.CascadeClassifier;
+//Library required for drawing onto image
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.HOGDescriptor;
+//Libraries required for video handling
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;
 import org.opencv.videoio.Videoio;
-
-/**
- * Histogram of Oriented Gradients object detector.
- */
 
 @SuppressWarnings({ "checkstyle:magicnumber", "PMD.LawOfDemeter", "PMD.AvoidLiteralsInIfCondition",
         "PMD.AvoidInstantiatingObjectsInLoops", "PMD.AvoidUsingNativeCode", "PMD.AvoidFinalLocalVariable",
@@ -47,57 +49,81 @@ import org.opencv.videoio.Videoio;
         "PMD.DataflowAnomalyAnalysis" })
 final class PeopleDetect {
     /**
-     * Logger.
+     * Logger
      */
     // Logger is not a constant
     @SuppressWarnings({ "checkstyle:constantname", "PMD.VariableNamingConventions" })
     private static final Logger logger = Logger.getLogger(PeopleDetect.class.getName());
     /** 
      * Load the OpenCV system library 
-     * Load dynamic library
-     * 
+     * Load dynamic library     * 
      */
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         System.load("E:\\Software\\OpenCV\\openCV3.1\\opencv\\build\\java\\x64\\openh264-1.4.0-win64msvc.dll");
     }
     
-    //Grey scale image
+    /**
+     * Method which takes two arguments, improving luminance, which is by far more important 
+     * in distinguishing visual features
+     * @param image a BufferedImage object used to create a new mat with the same dimensions
+     * @param mat a Mat object which is used to duplicate an image
+     * @return Returns a grey scaled mat object
+     */
     public static Mat greyScale(BufferedImage image, Mat mat){
     	
-        Mat mat1 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
-        Imgproc.cvtColor(mat, mat1, Imgproc.COLOR_RGB2GRAY);
+        Mat mat2 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
+        Imgproc.cvtColor(mat, mat2, Imgproc.COLOR_RGB2GRAY);
 
-        /*byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int)(mat1.elemSize())];
-        mat1.get(0, 0, data1);
-        BufferedImage image1 = new BufferedImage(mat1.cols(),mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
-        image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);    
-        */
-        Imgcodecs.imwrite("./output/test2.jpg", mat1);
-        return mat1;
+        return mat2;
     }
     
-    //Histogram equalization
+    /**
+     * Method which performs a Histogram Equalization, improving contrast in the image
+     * @param image a BufferedImage object used to create a new mat with the same dimensions
+     * @param mat a Mat object which is used to duplicate an image
+     * @return Returns a Mat object of the image with an increase in contrast
+     */
     public static Mat equalization(BufferedImage image, Mat mat){
-    	Mat mat1 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
-        Imgproc.equalizeHist(mat, mat1);
-    	Imgcodecs.imwrite("./output/test3.jpg", mat1);
+    	
+    	Mat mat2 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
+        Imgproc.equalizeHist(mat, mat2);
+    	//Imgcodecs.imwrite("./output/test3.jpg", mat1);
         
-    	return mat1;
+    	return mat2;
     }
     
-    public static void processImage(String url) throws IOException{
-    	
-    	try{    		
-	    	File input = new File(url);
-	        BufferedImage image = ImageIO.read(input);    
+    /**
+     * Method which generates a Mat object used for various operations
+     * @param image a BufferedImage object used to create a new mat with the same dimensions
+     * as well provide pixel writing capabilities - image.getRaster().
+     * @return Returns a standard Mat object of the image 
+     */
+    public static Mat generateMat(BufferedImage image){
+    	   		  
 	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 	        Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
 	        mat.put(0, 0, data);
-	       	        
+	        
+	        return mat;
+    }
+    
+    /**
+     * Method which processes an image for human detection
+     * @param url a String containing the location of an image
+     * @throws IOException
+     */
+    public static void processImage(String url) throws IOException{
+    	
+    	try{    
+	    	File input = new File(url);
+	        BufferedImage image = ImageIO.read(input);
+	        Mat mat = generateMat(image);
+	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+
 	        //mat = greyScale(image, mat);
 	        //mat = equalization(image,mat);
-	        
+
 	        //Initialise and set hog descriptor to "people detector"
 	        final HOGDescriptor hog = new HOGDescriptor();
 	    	hog.setSVMDetector(HOGDescriptor.getDefaultPeopleDetector());
@@ -107,10 +133,6 @@ final class PeopleDetect {
 	    	MatOfDouble weight = new MatOfDouble();
 	    	//Colour of rectangle to be drawn onto image
 	    	final Scalar rectColor = new Scalar(0, 255, 0); 
-	        //final Scalar fontColor = new Scalar(255, 255, 255);
-	        final Point rectPoint1 = new Point();
-	        final Point rectPoint2 = new Point();
-	        final Point fontPoint = new Point();
 	        final long startTime = System.currentTimeMillis();
 	        
 	    	while (true){
@@ -120,15 +142,8 @@ final class PeopleDetect {
 		    		logger.log(Level.INFO, "Human Detected!");
 	                final List<Rect> rectList = found.toList();
 	                for (final Rect rect : rectList) {
-	                    rectPoint1.x = rect.x;
-	                    rectPoint1.y = rect.y;
-	                    rectPoint2.x = rect.x + rect.width;
-	                    rectPoint2.y = rect.y + rect.height;
 	                    //Draw rectangle around fond object
-	                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);
-	                    //Imgproc.rectangle(mat1, rectPoint1, rectPoint2, rectColor, 2);
-	                    fontPoint.x = rect.x;
-	                    fontPoint.y = rect.y - 4;
+	                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);   
 	                }
 	                
 	                //Create an image file to store the mat object into (Same dimensions as original image)
@@ -137,19 +152,16 @@ final class PeopleDetect {
 			    	//Write the contents of the mat object to the output variable
 			    	Imgcodecs.imwrite("./output/test.jpg", mat);
 	            }
-		    	
-		    	
 		    	break;
 	    	}	    	
 	    	
 	    	final long estimatedTime = System.currentTimeMillis() - startTime;
 	        final double seconds = (double) estimatedTime / 1000;
-	        logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds, seconds));
+	        logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
 	        
 	        found.release();
 	        weight.release();
 	        mat.release();
-	        //mat1.release();
 	     
     	} catch (Exception e) {
 	        System.out.println("Error: " + e.getMessage());
@@ -159,18 +171,12 @@ final class PeopleDetect {
     /**
      * process video
      */
-    public static void processVideo(/*String url*/){
+    public static void processVideo(String url){
     	
-    	String url = "./resources/walking.mp4";
-    	final String outputFile = "./output/test.avi";    	    	
-    	logger.log(Level.INFO, String.format("Output file: %s", outputFile));
-    	
+    	final String outputFile = "./output/test.avi";    	    	    	
     	final VideoCapture videoCapture = new VideoCapture(url);
         final Size frameSize = new Size((int) videoCapture.get(Videoio.CAP_PROP_FRAME_WIDTH),
-                (int) videoCapture.get(Videoio.CAP_PROP_FRAME_HEIGHT));
-        
-        logger.log(Level.INFO, String.format("Resolution: %s", frameSize));
-        
+                (int) videoCapture.get(Videoio.CAP_PROP_FRAME_HEIGHT));    
         final FourCC fourCC = new FourCC("X264");
         final VideoWriter videoWriter = new VideoWriter(outputFile, fourCC.toInt(),
                 videoCapture.get(Videoio.CAP_PROP_FPS), frameSize, true);
@@ -185,19 +191,13 @@ final class PeopleDetect {
         final Point rectPoint1 = new Point();
         final Point rectPoint2 = new Point();
         final Point fontPoint = new Point();
-        int frames = 0;
-        int framesWithPeople = 0;
         final Scalar rectColor = new Scalar(0, 255, 0);
-        final Scalar fontColor = new Scalar(255, 255, 255);
         final long startTime = System.currentTimeMillis();
                 
         while (videoCapture.read(mat)) {
             hog.detectMultiScale(mat, foundLocations, foundWeights, 0.0, winStride, padding, 1.025, 2.0, false);
             if (foundLocations.rows() > 0) {
-                framesWithPeople++;
-                final List<Double> weightList = foundWeights.toList();
                 final List<Rect> rectList = foundLocations.toList();
-                int index = 0;
                 for (final Rect rect : rectList) {
                     rectPoint1.x = rect.x;
                     rectPoint1.y = rect.y;
@@ -206,23 +206,15 @@ final class PeopleDetect {
                     //Draw rectangle around fond object
                     Imgproc.rectangle(mat, rectPoint1, rectPoint2, rectColor, 2);
                     fontPoint.x = rect.x;
-                    //Illustration
                     fontPoint.y = rect.y - 4;
-                    //Print weight
-                    //Illustration
-                    Imgproc.putText(mat, String.format("%1.2f", weightList.get(index)), fontPoint,
-                            Core.FONT_HERSHEY_PLAIN, 1.5, fontColor, 2, Core.LINE_AA, false);
-                    index++;
                 }
             }
 
             videoWriter.write(mat);
-            frames++;
         }
         final long estimatedTime = System.currentTimeMillis() - startTime;
         final double seconds = (double) estimatedTime / 1000;
-        logger.log(Level.INFO, String.format("%d frames, %d frames with people", frames, framesWithPeople));
-        logger.log(Level.INFO, String.format("%4.1f FPS, elapsed time: %4.2f seconds", frames / seconds, seconds));
+        logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
         
         //Release native memory
         videoCapture.release();
@@ -264,6 +256,6 @@ final class PeopleDetect {
         if (url.contains(".jpg") == true)
             processImage(url);
         else
-        	processVideo();
+        	processVideo(url);
     }
 }
