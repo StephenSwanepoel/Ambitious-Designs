@@ -100,12 +100,12 @@ final class PeopleDetect {
      * @param Returns the modified Mat object
      */
     public static Mat enlargeImage(BufferedImage image, Mat mat){
-    	/*
-    	Mat mat = cropImage(image,rect);
-    	Mat resizeimage = new Mat();
-    	Size sz = new Size(100,100);
-    	Imgproc.resize( mat, resizeimage, sz );*/
-    	return mat;
+    	
+    	Mat mat2 = new Mat();
+    	Imgproc.resize(mat, mat2, new Size(480,640));
+    	//Imgproc.resize(resizeimage, size);
+    	
+    	return mat2;
     }
     
     /**
@@ -132,7 +132,7 @@ final class PeopleDetect {
     public static void generateImage(BufferedImage image, Mat mat, byte[] data){
     	
     	//Create an image file to store the mat object into (Same dimensions as original image)
-    	BufferedImage output = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+    	BufferedImage output = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_BYTE_GRAY);
     	output.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), data);
     	//Write the contents of the mat object to the output variable
     	Imgcodecs.imwrite("./output/test.jpg", mat);
@@ -156,10 +156,14 @@ final class PeopleDetect {
 	        	        
 	        //Initialise and set hog descriptor to "people detector"
 	        final HOGDescriptor hog = new HOGDescriptor();
+	        //hog.load("C:\\Users\\Stephen\\Desktop\\Smart Image Identifier\\src\\xml\\haarcascade_fullbody.xml");
+	       // hog.setSVMDetector(_svmdetector);
 	    	hog.setSVMDetector(HOGDescriptor.getDefaultPeopleDetector());
 	    	//Initialise variables to identify humans in the image / video 
 	    	//by locating box points to form a rectangle around the detected object
 	    	MatOfRect found = new MatOfRect();
+	    	//Resize image	    	
+	    	mat = enlargeImage(image,mat);
 	    	MatOfDouble weight = new MatOfDouble();
 	    	//Colour of rectangle to be drawn onto image
 	    	final Scalar rectColor = new Scalar(0, 255, 0); 
@@ -169,10 +173,11 @@ final class PeopleDetect {
     		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.025, 2, false);
 	    	if (found.rows() > 0) {
 	    		detected = true;
-                final List<Rect> rectList = found.toList();
+	    		final List<Rect> rectList = found.toList();
                 for (final Rect rect : rectList) {
                     //Draw rectangle around found object
-                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);   
+                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);  
+                    
                 }
     	    	generateImage(image, mat, data);
             }	    	
@@ -258,7 +263,7 @@ final class PeopleDetect {
         // Check how many arguments were passed in
         if (args.length == 0) {
             // If no arguments were passed then default to local file
-        	url = "./resources/human2.jpg";
+        	url = "./resources/trail9.jpg";
         } else {
         	url = args[0];
         }
