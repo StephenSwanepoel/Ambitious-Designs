@@ -4,7 +4,7 @@
  * Created by Steven P. Goldsmith on June 22, 2015
  * sgoldsmith@codeferm.com
  */
-package com.codeferm.opencv.defaultImpl;
+package com.codeferm.opencv;
 
 import java.io.IOException;
 import java.util.logging.Level;

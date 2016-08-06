@@ -4,7 +4,7 @@
  * Created by Steven P. Goldsmith on December 29, 2013
  * sgoldsmith@codeferm.com
  */
-package com.codeferm.opencv.defaultImpl;
+package com.codeferm.opencv;
 
 /**
  * A "four character code" (4CC), as used in AVI files.
