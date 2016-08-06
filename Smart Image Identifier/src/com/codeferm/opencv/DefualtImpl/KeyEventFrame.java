@@ -4,7 +4,7 @@
  * Created by Steven P. Goldsmith on December 22, 2013
  * sgoldsmith@codeferm.com
  */
-package com.codeferm.opencv;
+package com.codeferm.opencv.DefualtImpl;
 
 import java.awt.AWTEvent;
 import java.awt.Frame;
