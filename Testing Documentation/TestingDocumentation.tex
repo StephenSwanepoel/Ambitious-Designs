@@ -1,0 +1,99 @@
+\documentclass[a4paper,12pt]{report}
+\addtolength{\oddsidemargin}{-1.cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{3.5cm}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+\makeindex
+
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage{verbatim}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+
+% define the title
+\author{Ambitious Design}
+\title{ Software Requirements Specifications and Technology Neutral Process Design}
+\begin{document}
+\setlength{\parskip}{6pt}
+
+% generates the title
+\begin{titlepage}
+
+\begin{center}
+% Upper part of the page           
+\textsc{\LARGE Willburg Outdoor PTY(ltd.)}\\[1.5cm]
+\textsc{\Large Smart Image Identifier }\\[1.0cm]
+\textsc{\Large Version 1.0 }\\[0.5cm]
+% Title
+\HRule \\[0.4cm]
+{ \huge \bfseries  Software Requirements Specifications and Technology Neutral Process Design}\\[0.4cm]
+\HRule \\[0.4cm]
+% Author and supervisor
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Stephen {Swanepoel}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{} \\
+u11032091
+\end{flushright}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+Dian {Veldsman}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{} \\
+u12081095
+\end{flushright}
+\end{minipage}
+
+
+{\large \today}
+\end{center}
+\end{titlepage}
+\footnotesize
+\normalsize
+
+\renewcommand{\thesection}{\arabic{section}}
+\newpage
+\begin{center}
+\textsc{\LARGE Software Requirements Specification}\\[1.5cm]
+\end{center}
+
+\section {Introduction}
+
+\section {Process Image}
+	\subsection {PeopleDetect_Test}
+		\subsubsection {GreyScale}
+			\paragraph {Test Case ID:}
+				testGreyScale
+			\paragraph {Test Tile:}
+				Verify if image is grey scaled
+			\paragraph {Description:}
+				Test if image is grey scaled after is sent has been sent through GreyScale()
+			\paragraph {Pre-conditions:}
+				Non-null coloured buffered image is sent through as parameter
+			\paragraph {Dependencies:}
+				testGenerateMat		
+			\paragraph {Post-conditions:}
+				Grey scaled image is stored in output folder
+				
+\end{document}	
