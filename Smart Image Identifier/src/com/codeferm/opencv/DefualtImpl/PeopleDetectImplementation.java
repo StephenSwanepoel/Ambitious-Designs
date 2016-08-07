@@ -63,7 +63,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
         //System.loadLibrary("E:\\Software\\OpenCV\\openCV3.1\\opencv\\build\\java\\x64\\openh264-1.4.0-win64msvc.dll");
         System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
     }
-    
+    private static boolean[] successfulTests = new boolean[3];
     /**
      * Method which takes two arguments, improving luminance, which is by far more important 
      * in distinguishing visual features
@@ -140,36 +140,79 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     }
     
     /**
-     * Method which processes an image for human detection
+     * Method used to run multiple tests on an image for human detection, atleast 66% of tests must 
+     * be passed in order for human detection to be successful
      * @param url a String containing the location of an image
      * @throws IOException
      */
-    public void processImage(String url) throws IOException{
+    public static void runTests(String url) throws IOException{
     	
-    	try{    
-	    	File input = new File(url);
+    	try{
+    		File input = new File(url);
 	        BufferedImage image = ImageIO.read(input);
 	        Mat mat = generateMat(image);
 	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-
-	        //mat = greyScale(image, mat);
-	        //mat = equalization(image,mat);
+	        
+	        //Resize image	    	
+	    	mat = enlargeImage(image,mat);
+	    	
+	    	Mat mat2 = greyScale(image,mat);	
+	    	Mat mat3 = equalization(image,mat2);
+	    	
+	    	logger.log(Level.INFO, "Initialising Tests");
+	    		    	
+	    	//Test 1 - Resize image + normal 
+	    	logger.log(Level.INFO, "Processing standard image");
+    		successfulTests[0] = processImage(mat, image, data);
+    		
+    		//Test 2 - Resize image + greyscale 
+    		logger.log(Level.INFO, "Processing greyscaled image");    		
+    		successfulTests[2] = processImage(mat2, image, data);
+    		    		   		
+    		//Test 3 - Resize image + equalisation   		
+    		logger.log(Level.INFO, "Processing equalise image");    		
+    		successfulTests[1] = processImage(mat3, image, data);
+    		    		
+    		logger.log(Level.INFO, "Tests complete");
+    		
+    		int count = 0;
+    		for (int i=0; i<3; i++){
+    			if (successfulTests[i] == true)
+    				count++;
+    		}
+    		
+    		if (count >= 2)
+    			logger.log(Level.INFO, "Human Detected!");
+    		else
+    			logger.log(Level.INFO, "No Human Detected!");
+    	}
+    	catch (Exception e) {
+	        System.out.println("Error: " + e.getMessage());
+	    }
+    }
+    
+    /**
+     * Method which processes an image for human detection
+     * @param image image a BufferedImage object used to create a new mat with the same dimensions
+     * @param mat a Mat object which is used to duplicate an image
+     * @param data provides pixel writing capabilities - image.getRaster()
+     * @throws IOException
+     */
+    public static boolean processImage(Mat mat, BufferedImage image, byte[] data) throws IOException{
+    	
+    	try{    
 	        	        
 	        //Initialise and set hog descriptor to "people detector"
 	        final HOGDescriptor hog = new HOGDescriptor();
-	        //hog.load("C:\\Users\\Stephen\\Desktop\\Smart Image Identifier\\src\\xml\\haarcascade_fullbody.xml");
-	       // hog.setSVMDetector(_svmdetector);
 	    	hog.setSVMDetector(HOGDescriptor.getDefaultPeopleDetector());
 	    	//Initialise variables to identify humans in the image / video 
 	    	//by locating box points to form a rectangle around the detected object
-	    	MatOfRect found = new MatOfRect();
-	    	//Resize image	    	
-	    	mat = enlargeImage(image,mat);
+	    	MatOfRect found = new MatOfRect();	    	
 	    	MatOfDouble weight = new MatOfDouble();
 	    	//Colour of rectangle to be drawn onto image
 	    	final Scalar rectColor = new Scalar(0, 255, 0); 
 	        final long startTime = System.currentTimeMillis();
-	        Boolean detected = false;
+	        boolean detected = false;
     		//Detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles
     		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.025, 2, false);
 	    	if (found.rows() > 0) {
@@ -177,8 +220,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	    		final List<Rect> rectList = found.toList();
                 for (final Rect rect : rectList) {
                     //Draw rectangle around found object
-                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);  
-                    
+                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);                      
                 }
     	    	generateImage(image, mat, data);
             }	    	
@@ -193,13 +235,15 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	        mat.release();
 	        
 	        if (detected)
-	        	logger.log(Level.INFO, "Human Detected!");
-	        else 
-	        	logger.log(Level.INFO, "No Human Detected!");
+	        	return true;
+	        	
+	        else
+		        return false;
 	     
-    	} catch (Exception e) {
+    	 } catch (Exception e) {
 	        System.out.println("Error: " + e.getMessage());
-	     } 	
+	     }
+    	return false;
     }
     
     /**
