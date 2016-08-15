@@ -64,18 +64,6 @@ Dian {Veldsman}
 u12081095
 \end{flushright}
 \end{minipage}
-\begin{minipage}{0.4\textwidth}
-\begin{flushleft} \large
-Killian {Kieck}
-\end{flushleft}
-\end{minipage}
-\begin{minipage}{0.4\textwidth}
-\begin{flushright} \large
-\emph{} \\
-u12252213
-\end{flushright}
-\end{minipage}
-
 
 {\large \today}
 \end{center}
@@ -89,13 +77,11 @@ u12252213
 \textsc{\LARGE Software Requirements Specification}\\[1.5cm]
 \end{center}
 
-
-
 \section{Introduction}
 This document aims to set out the functional and non-functional requirements of a system as specified by the Willburg Outdoor PTY(ltd.). The system is required to assess an image by sorting the image into baskets and groupings and then identify if a human is present in the picture. The document will also serve the purpose of communicating the requirements and specifications as needed by the client.
 
  \subsubsection{Vision}
- The client for this project, Willburg Outdoor PTY(ltd.), has called for the design of an application that will assess an images, identify a human(s) in the image. If a human has been identified by the system, a call must then be set out to warn a user. The main idea behind the project is to be able to alert the user, of the Willburg camera, that a human has been identified so that the user will be informed about the movement around the camera.
+ The client for this project, Willburg Outdoor PTY(ltd.), has called for the design of an application that will assess an images, identify a human(s) in the image and send the result back as a response to the server based on the outcome of the image which was processed.
 
 \subsubsection{Background}
 Rhino poaching is currently at a crisis point. By the end of 2015, the number of African rhinos killed by poachers had increased for the sixth year in a row with at least 1,338 rhinos killed by poachers across Africa in 2015. South Africa has by far the largest population of rhinos in the world and is an incredibly important country for rhino conservation. However rhino poaching levels have dramatically escalated over recent years. \\
@@ -114,44 +100,38 @@ Rhino poaching is currently at a crisis point. By the end of 2015, the number of
 \section {Overall Software architecture}	
 \subsection{Architecture Requirements}
 \subsubsection{Access and Integration Requirements}
-Any and all interactions by the user will be done through the Willburg Application.
+Any and all interactions by the user will be done through the Willburg Application - this is an application previously designed by the project owner for mobile platforms. All user interactions fall outside of our project scope. 
 \subsubsection{Quality Requirements}
 \paragraph{Performance}
 \begin{enumerate}
 	\item Images should only be captured and processed if some movement is detected to ensure that the server does not get overloaded.
-	\item Images which are processed should not be large in size so they may be processed faster by the server.
-	\item The system must be created with the most minimal and efficient coding
-	practices possible, given that the result must still be reliable and robust.
+	\item Images which are processed are resized to improve detection as well as to speed at which they are processed by the server.
+	\item The system has been created with the most minimal and efficient coding practices possible, given that the result must still be reliable and robust.
 \end{enumerate}
 \paragraph{Reliability}
 \begin{enumerate}
-	\item The system must be thoroughly tested on the server side, to
-	ensure it will not cause faults or problems. 
+	\item The system must be thoroughly tested on the server side, to ensure it will not cause faults or problems. 
 	\item The notification warning users will receive must be sent out immediately after the image has been processed in a real-time manner.
 \end{enumerate}
 \paragraph{Scalability}
 \begin{enumerate}
-	\item Modular programming should be used in order to ensure that there are no restrictions in terms of the systems ability to be extended and improved upon at later stages.
-	\item The server should be able to process multiple images at once to ensure the real-time restriction is met.
-\end{enumerate}
-\paragraph{Security}
-\begin{enumerate}
-	\item Depending on the technology being used the various security measures should be in place to ensure the integrity of the server, such as: SQL injections etc.
+	\item Modular programming has be used in order to ensure that there are no restrictions in terms of the systems ability to be extended and improved upon at later stages. It also ensures easy testing of core functionality.
+	\item The server should be able to process multiple images at once to ensure the real-time restriction is met for all clients of Willburg.
 \end{enumerate}
 \paragraph{Flexibility}
 \begin{enumerate}
-	\item The system should be able to perform correctly even while under strain due to bulk processing without any loss of data.
-	\item The system should be modularized to ensure both easy testing of components as well as addition of components without affecting the system.
+	\item The system should be able to perform correctly even while under strain due to bulk processing without any loss of data and ensuring the real-time restriction is met.
+	\item The system has been modularized to ensure both easy testing of components as well as addition of components without affecting the entire system.
 \end{enumerate}
 \paragraph{Maintainability}
 \begin{enumerate}
-	\item The system should be designed in technologies which offer user support and continuous updates for extra functionality.
-	\item The system must be well structured and documented to ensure future developers are able to understand and maintain the system.
-	\item The modular design of the system must be such that if changes must be made to a part of the system, only that part itself should be changed.
+	\item The system has been designed in technologies which offer user support and continuous updates for extra functionality.
+	\item The system has been well structured and documented to ensure future developers are able to understand and maintain the system.
+	\item The modular design of the system ensures that if changes must be made to a part of the system, only that part itself should be changed without affecting the rest of the system.
 \end{enumerate}
 \paragraph{Auditability}
 \begin{enumerate}
-	\item All images processed should be logged and traceable(user, date, time etc.) once pushed into the database.
+	\item All images processed will be logged and traceable(user, date, time etc.) once pushed into the database.
 \end{enumerate}
 \paragraph{Integrability}
 \begin{enumerate}
@@ -159,18 +139,14 @@ Any and all interactions by the user will be done through the Willburg Applicati
 \end{enumerate}
 \paragraph{Cost}
 \begin{enumerate}
-	\item The tools used to design the system should, as far as possible be open source, free and not require a license.
+	\item The tools used to design the system have been selected to be as open sourced as possible, free and not require a license.
 	\item In certain cases, paid and licensed software may be suitable for specific aspects of the system. 
 \end{enumerate}
 \paragraph{Usability}
 \begin{enumerate}
-	\item The Willburg application should be easy for users to interact with regarding the notifications they will be receiving.
+	\item The system should be easily integrated with the current software running on the Willburg server.
 \end{enumerate}
 \newpage
-
-\subsubsection {Architectural responsibilities}
-	
-\subsubsection {Architecture Constraints}
 
 \subsection {Architecture design}
 This section specifies the very high-level software architecture design, i.e. the software architecture
@@ -257,9 +233,6 @@ being available.
 \paragraph {Reliability tactics}
 \hfill \break
 The application server must provide support for transactions which may enlist a variety of resources. In particular, the system requires the ability to commit and rollback across the persistence provider (i.e. the database).The transaction support should be declarative, i.e. that one specifies the transactional requirements and does not hard code transaction boundaries. This has the advantage that services can be reused across different business processes requiring different transactional boundaries. 
-
-\paragraph {Security}
-\hfill \break
 
 \paragraph {Auditability tactics}
 \hfill \break
