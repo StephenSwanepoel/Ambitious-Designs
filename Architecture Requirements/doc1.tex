@@ -104,14 +104,13 @@ Any and all interactions by the user will be done through the Willburg Applicati
 \subsubsection{Quality Requirements}
 \paragraph{Performance}
 \begin{enumerate}
-	\item Images should only be captured and processed if some movement is detected to ensure that the server does not get overloaded.
-	\item Images which are processed are resized to improve detection as well as to speed at which they are processed by the server.
-	\item The system has been created with the most minimal and efficient coding practices possible, given that the result must still be reliable and robust.
+	\item Images which are processed are resized to improve detection as well as the speed at which they are processed by the server.
+	\item The system has been created with the most minimal and efficient coding practices possible, given that the result must still be reliable and robust. These coding practices include: thread pooling and object pooling. 
 \end{enumerate}
 \paragraph{Reliability}
 \begin{enumerate}
-	\item The system must be thoroughly tested on the server side, to ensure it will not cause faults or problems. 
-	\item The notification warning users will receive must be sent out immediately after the image has been processed in a real-time manner.
+	\item The system will be thoroughly tested on the server side, to ensure it will not cause faults or problems. 
+	\item The response delivered by the system should be in a real-time manner to ensure that clients of Willburg may be notified of a possible intruder.
 \end{enumerate}
 \paragraph{Scalability}
 \begin{enumerate}
@@ -125,7 +124,7 @@ Any and all interactions by the user will be done through the Willburg Applicati
 \end{enumerate}
 \paragraph{Maintainability}
 \begin{enumerate}
-	\item The system has been designed in technologies which offer user support and continuous updates for extra functionality.
+	\item The system has been designed using technologies which offer user support and continuous updates for extra functionality.
 	\item The system has been well structured and documented to ensure future developers are able to understand and maintain the system.
 	\item The modular design of the system ensures that if changes must be made to a part of the system, only that part itself should be changed without affecting the rest of the system.
 \end{enumerate}
@@ -133,19 +132,28 @@ Any and all interactions by the user will be done through the Willburg Applicati
 \begin{enumerate}
 	\item All images processed will be logged and traceable(user, date, time etc.) once pushed into the database.
 \end{enumerate}
-\paragraph{Integrability}
-\begin{enumerate}
-	\item The system should be designed in a manner which allows for easy 
-\end{enumerate}
 \paragraph{Cost}
 \begin{enumerate}
-	\item The tools used to design the system have been selected to be as open sourced as possible, free and not require a license.
-	\item In certain cases, paid and licensed software may be suitable for specific aspects of the system. 
+	\item The tools used to design the system have been selected to be as open sourced as possible, free and not require a license for use.
 \end{enumerate}
-\paragraph{Usability}
+
+\subsubsection{Architectural responsibilities}
+
+
+\subsubsection{Architectural constraints}
+\paragraph{Architeture Constraint}
 \begin{enumerate}
-	\item The system should be easily integrated with the current software running on the Willburg server.
+	\item Higher level layers can interact with layers below but lower levels should never interact with levels above.
 \end{enumerate}
+\paragraph{Design Constraint}
+\begin{enumerate}
+	\item All application software will be modularized into classes using object-oriented design principles.
+\end{enumerate}
+\paragraph{Implementation Constraint}
+\begin{enumerate}
+	\item All software components of the application shall be programmed in Java programming language.
+\end{enumerate}
+
 \newpage
 
 \subsection {Architecture design}
@@ -155,9 +163,18 @@ architectural components, any tactics which should be used at the current level 
 address quality requirements
 
 \subsubsection {Architectural tactics}
+\paragraph{Thread pooling}
+\begin{enumerate}
+	\item Thread pooling is used to improve scalability within the system by handling mutiple requests from the server in order to be able to handle the load from their client base.
+\end{enumerate}
+\paragraph{Interception}
+\begin{enumerate}
+	\item Interception is used for auditability to ensure the system contains a full log of all events and details about which client launched the event. This will be useful in ensuring a response may linked to the respective client.
+\end{enumerate}
 \subsubsection {Architectural components addressing architectural responsibilities}
 
 \subsubsection {Infrastructure}
+The layered architectural pattern provides an infrustructure which limits access of components within one layer to components which are either in the same or the next lower level layer. One of the strengths is that a layer can be easily replaced. In particular, one can add further access channels without changing any lower level layers within the software system.
 
 \section {Application Layer or Framework}
 \subsection {Software architecture requirements}
@@ -182,7 +199,7 @@ In particular, the scalability, maintainability, auditability and deployability 
 
 \paragraph {Flexibility} 
 \hfill \break
- Flexibility requirements for the application server include
+ Flexibility requirements for the application server include:
 	\begin{itemize}
 		\item The ability to deploy versions of the system with minimum system down-time
 		\item The ablity to replace any lower level service with ease
@@ -192,20 +209,12 @@ In particular, the scalability, maintainability, auditability and deployability 
 	Reliability is required around the buisness processes themselves at this level of the business process layer.
 	In particular, we require that service contracts are either fully realized as per the service contract or that the calling entity is provided with a reason  for not providing the service.
 
-\paragraph {Security}
-\hfill \break
-The system does not have potential users accesing methods which should not be accessed and thus does not require authorization. Although, no direct access should given to the database, i.e. data is only accessible through the services offered by the system, with the application server authenticating itself with the database.
-
 \paragraph {Testability}
 \hfill \break
 All services offered by the system must be testable through automated unit tests, testing components in isolation using mock objects, and automated integration tests where components are integrated within the actual environment.
 These functional tests should verify that the service is provided if all pre-conditions are met and that all post-conditions hold true once the service has been provided.
 
-\paragraph {Flexibility}
-\hfill \break
-All services offered by the system must be testable through automated unit tests, testing components in isolation using mock objects, and automated integration tests where components are integrated within the actual environment.
-These functional tests should verify that the service is provided if all pre-conditions are met and that all post-conditions hold true once the service has been provided.
-
+\FloatBarrier
 \subsubsection {Architectural responsiblities}
 
 	\begin{figure}[htb]
@@ -214,32 +223,32 @@ These functional tests should verify that the service is provided if all pre-con
 		\caption{The architectural responsibilities of the application server}
 	\end{figure}
 
-
+\FloatBarrier
 \subsection {Architecture design}
 \subsubsection {Tactics}
 \paragraph {Flexibility tactics}
 \hfill \break
-The chosen application server should concretely address the flexibility requirements. The application server should support 
+The chosen application server should concretely address the flexibility requirements. The application server should support: 
 	\begin {itemize}
-		\item hot-deployment, i.e. the ablility to deploy new versions of the system into the live enviroment with minimum downtime
+		\item hot-deployment, i.e. the ablility to deploy new versions of the system into the live enviroment with minimum downtime.
 		\item component (contract) based software development with dependency injection.
 	\end {itemize}
  
 \paragraph {Maintainability tactics}
 \hfill \break
-The application server should be based on a public standard with multiple implementations including at least one open-source implementation of the standard.
-being available.
+The application server will be based on a public standard with multiple implementations including at least one open-source implementation of the standard being available.
 
 \paragraph {Reliability tactics}
 \hfill \break
-The application server must provide support for transactions which may enlist a variety of resources. In particular, the system requires the ability to commit and rollback across the persistence provider (i.e. the database).The transaction support should be declarative, i.e. that one specifies the transactional requirements and does not hard code transaction boundaries. This has the advantage that services can be reused across different business processes requiring different transactional boundaries. 
+The application server must provide support for transactions which may enlist a variety of resources. In particular, the system requires the ability to commit across the persistence provider (i.e. the database). The transaction support should be declarative, i.e. that one specifies the transactional requirements and does not hard code transaction boundaries. This has the advantage that services can be reused across different business processes requiring different transactional boundaries. 
 
 \paragraph {Auditability tactics}
 \hfill \break
-Auditability is an important quality requirement and needs to be addressed in the business processes layer. The auditability specification must be maintainable. To this end, the application server must support specifying logging logic (advices) as cross-cutting concerns within aspects or at least provide the ability to apply logging via interception.
+Auditability will be implemented within the system via a log which will contain all transactions processed by the system. The application server will support specifying logging logic (advices) as crosscutting concerns within aspects or at least provide the ability to apply logging via interception.
 
 \paragraph {Testability tactics }
-In order to be able to reuse unit tests as integration and regression tests the frameworks and technologies used at the business process layer must support dependency injection. The application server must support hosting code which can be tested outside the application server
+\hfill \break
+The business process layer supports dependency injection through J-Unit. The application server will support hosting code which can be tested outside the application server.
 
 \subsubsection {Architectural components}
 	\begin{figure}[htb]
@@ -250,7 +259,7 @@ In order to be able to reuse unit tests as integration and regression tests the 
 
 \subsubsection {Application Component Concepts and Constraints}
 The central concept which will be used to specify application logic (the business processes) are the
-concepts of
+concepts of:
 	\begin {itemize}
 		\item a \textit{service contract} which encodes the requirements for a service
 		\item a \textit{service} which encodes the concrete implementation of a service. 
@@ -259,7 +268,6 @@ These services which encapsulate the processes will be constrained to be statele
 is maintained across service requests.
 Long living state is maintained in domain objects which are typically persisted and which should
 not have any business logic.
-
 
 
 \subsubsection {Frameworks and technologies}
