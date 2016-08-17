@@ -16,10 +16,13 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
 //Library required for read/write operations for images
 import javax.imageio.ImageIO;
+
 //Libraries required for creating BufferedImage instances
 import java.awt.image.*;
+
 //Libraries required for defining mat objects as well as
 //performing various operations on them
 import org.opencv.core.Core;
@@ -63,7 +66,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
         //System.loadLibrary("E:\\Software\\OpenCV\\openCV3.1\\opencv\\build\\java\\x64\\openh264-1.4.0-win64msvc.dll");
         System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
     }
-    private static boolean[] successfulTests = new boolean[3];
+    private boolean[] successfulTests = new boolean[3];
     /**
      * Method which takes two arguments, improving luminance, which is by far more important 
      * in distinguishing visual features
@@ -145,7 +148,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      * @param url a String containing the location of an image
      * @throws IOException
      */
-    public static void runTests(String url) throws IOException{
+    public void runTests(String url) throws IOException{
     	
     	try{
     		File input = new File(url);
@@ -198,7 +201,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      * @param data provides pixel writing capabilities - image.getRaster()
      * @throws IOException
      */
-    public static boolean processImage(Mat mat, BufferedImage image, byte[] data) throws IOException{
+     boolean processImage(Mat mat, BufferedImage image, byte[] data) throws IOException{
     	
     	try{    
 	        	        
@@ -301,6 +304,12 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     public PeopleDetectImplementation() {
    
     }
+
+	@Override
+	public void processImage(String url) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
     
     /*public static void main(final String... args) throws IOException {
     	
