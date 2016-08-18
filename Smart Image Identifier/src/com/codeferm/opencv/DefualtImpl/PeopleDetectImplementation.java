@@ -63,8 +63,9 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      */
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        //System.load("lib/openh264-1.4.0-win64msvc.dll");
         //System.loadLibrary("E:\\Software\\OpenCV\\openCV3.1\\opencv\\build\\java\\x64\\openh264-1.4.0-win64msvc.dll");
-        System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
+        //System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
     }
     private boolean[] successfulTests = new boolean[3];
     /**
@@ -92,7 +93,6 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     	
     	Mat mat2 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
         Imgproc.equalizeHist(mat, mat2);
-    	//Imgcodecs.imwrite("./output/test3.jpg", mat1);
         
     	return mat2;
     }
@@ -106,8 +106,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     public Mat enlargeImage(BufferedImage image, Mat mat){
     	
     	Mat mat2 = new Mat();
-    	Imgproc.resize(mat, mat2, new Size(480,640));
-    	//Imgproc.resize(resizeimage, size);
+    	Imgproc.resize(mat, mat2, new Size(640,640));
     	
     	return mat2;
     }
@@ -133,13 +132,29 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      * @param mat a Mat object which is used to duplicate an image
      * @param data provides pixel writing capabilities - image.getRaster()
      */
-    public void generateImage(BufferedImage image, Mat mat, byte[] data){
+    public void generateImage(BufferedImage image, Mat mat, byte[] data, String url, char type){
     	
     	//Create an image file to store the mat object into (Same dimensions as original image)
     	BufferedImage output = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_BYTE_GRAY);
     	output.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), data);
     	//Write the contents of the mat object to the output variable
-    	Imgcodecs.imwrite("./output/test.jpg", mat);
+    	String outputFile = "./output/";
+    	String img = url.substring(12);
+    	switch(type)
+    	{    	
+	    	case 'N':
+	    		outputFile += "normal/" + img;
+	    		Imgcodecs.imwrite(outputFile, mat);
+	    		break;
+	    	case 'G':
+	    		outputFile += "greyScale/" + img;
+	    		Imgcodecs.imwrite(outputFile, mat);
+	    		break;
+	    	case 'E':
+	    		outputFile += "EQ/" + img;
+	    		Imgcodecs.imwrite(outputFile, mat);
+	    		break;
+    	}
     }
     
     /**
@@ -157,24 +172,22 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 	        
 	        //Resize image	    	
-	    	mat = enlargeImage(image,mat);
-	    	
+	        mat = enlargeImage(image,mat);	    	
 	    	Mat mat2 = greyScale(image,mat);	
 	    	Mat mat3 = equalization(image,mat2);
 	    	
 	    	logger.log(Level.INFO, "Initialising Tests");
-	    		    	
 	    	//Test 1 - Resize image + normal 
 	    	logger.log(Level.INFO, "Processing standard image");
-    		successfulTests[0] = processImage(mat, image, data);
+    		successfulTests[0] = processImage(mat, image, data, url, 'N');
     		
     		//Test 2 - Resize image + greyscale 
     		logger.log(Level.INFO, "Processing greyscaled image");    		
-    		successfulTests[2] = processImage(mat2, image, data);
+    		successfulTests[1] = processImage(mat2, image, data, url, 'G');
     		    		   		
     		//Test 3 - Resize image + equalisation   		
     		logger.log(Level.INFO, "Processing equalise image");    		
-    		successfulTests[1] = processImage(mat3, image, data);
+    		successfulTests[2] = processImage(mat3, image, data, url, 'E');
     		    		
     		logger.log(Level.INFO, "Tests complete");
     		
@@ -201,8 +214,8 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      * @param data provides pixel writing capabilities - image.getRaster()
      * @throws IOException
      */
-     boolean processImage(Mat mat, BufferedImage image, byte[] data) throws IOException{
-    	
+     boolean processImage(Mat mat, BufferedImage image, byte[] data, String url, char type) throws IOException{
+    	 
     	try{    
 	        	        
 	        //Initialise and set hog descriptor to "people detector"
@@ -217,15 +230,15 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	        final long startTime = System.currentTimeMillis();
 	        boolean detected = false;
     		//Detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles
-    		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.025, 2, false);
-	    	if (found.rows() > 0) {
+    		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.025, 2, false);    		
+    		if (found.rows() > 0) {
 	    		detected = true;
 	    		final List<Rect> rectList = found.toList();
                 for (final Rect rect : rectList) {
                     //Draw rectangle around found object
                     Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);                      
                 }
-    	    	generateImage(image, mat, data);
+    	    	generateImage(image, mat, data, url, type);
             }	    	
 	    	
 	    	final long estimatedTime = System.currentTimeMillis() - startTime;
