@@ -4,8 +4,8 @@
 \addtolength{\topmargin}{-2cm}
 \addtolength{\textheight}{3.5cm}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
-\setcounter{secnumdepth}{5}
-\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{6}
+\setcounter{tocdepth}{4}
 \makeindex
 
 \usepackage{longtable}
@@ -13,6 +13,24 @@
 \usepackage{makeidx}
 \usepackage{hyperref}
 \usepackage{verbatim}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{titlesec}
+
+\makeatletter
+\newcounter{subsubparagraph}[subparagraph]
+\renewcommand\thesubsubparagraph{%
+  \thesubparagraph.\@arabic\c@subsubparagraph}
+\newcommand\subsubparagraph{%
+  \@startsection{subsubparagraph}    % counter
+    {6}                              % level
+    {\parindent}                     % indent
+    {3.25ex \@plus 1ex \@minus .2ex} % beforeskip
+    {-1em}                           % afterskip
+    {\normalfont\normalsize\bfseries}}
+\newcommand\l@subsubparagraph{\@dottedtocline{6}{10em}{5em}}
+\newcommand{\subsubparagraphmark}[1]{}
+\makeatother
 
 \hypersetup{
     colorlinks=true,
@@ -83,10 +101,9 @@ This document aims to set out the functional and non-functional requirements of 
  \subsubsection{Vision}
  The client for this project, Willburg Outdoor PTY(ltd.), has called for the design of an application that will assess an images, identify a human(s) in the image and send the result back as a response to the server based on the outcome of the image which was processed.
 
-\subsubsection{Background}
-Rhino poaching is currently at a crisis point. By the end of 2015, the number of African rhinos killed by poachers had increased for the sixth year in a row with at least 1,338 rhinos killed by poachers across Africa in 2015. South Africa has by far the largest population of rhinos in the world and is an incredibly important country for rhino conservation. However rhino poaching levels have dramatically escalated over recent years. \\
-\\The South African farm attacks are an ongoing trend of violent attacks on farmers in South Africa. Between 1994 and March 2012, there have been 361,015 murders in South Africa. While the police are supposed to regularly visit commercial farms to ensure security, they claim they cannot provide effective protection due to the wide areas that need to be covered and a lack of funding.\\
-\\Willburg Outdoor is company that is passionate about the South Africa. With this passion comes the need to protect its farmers and it animals from those who intend to harm them.The client intends to use the system to fight these two problems by alerting the user of the Willburg camera of the identification in an effort to potentially stop a crime or poaching from accuring. This will hopefully deter future poachers and farm attackers.
+\subsubsection{Background}\hfill \break
+Willburg Outdoor is company that is passionate about South Africa. With this passion comes the need to protect its farmers and it animals from those who intend to harm them. The client intends to use the system to assist in fighting the following problems: animal poaching and farm attacks. 
+Willburg provides its' clients with a camera system which is interfaced with a dashboard as well as a mobile application. The cameras snap pictures when movement is detected and sends them to the Willburg server. The images are then pushed to the respective users. Willburg intend on providing its' users with real-time push notifications when a human has been detected in an image captured by a camera on their property. Smart Image Identifier will play an influential role in the prevention of both farm attacks as well as poaching.
 
 \section {Software architecture overview}
 
@@ -102,41 +119,99 @@ Rhino poaching is currently at a crisis point. By the end of 2015, the number of
 \subsubsection{Access and Integration Requirements}
 Any and all interactions by the user will be done through the Willburg Application - this is an application previously designed by the project owner for mobile platforms. All user interactions fall outside of our project scope. 
 \subsubsection{Quality Requirements}
-\paragraph{Performance}
-\begin{enumerate}
-	\item Images which are processed are resized to improve detection as well as the speed at which they are processed by the server.
-	\item The system has been created with the most minimal and efficient coding practices possible, given that the result must still be reliable and robust. These coding practices include: thread pooling and object pooling. 
-\end{enumerate}
-\paragraph{Reliability}
-\begin{enumerate}
-	\item The system will be thoroughly tested on the server side, to ensure it will not cause faults or problems. 
-	\item The response delivered by the system should be in a real-time manner to ensure that clients of Willburg may be notified of a possible intruder.
-\end{enumerate}
-\paragraph{Scalability}
-\begin{enumerate}
-	\item Modular programming has be used in order to ensure that there are no restrictions in terms of the systems ability to be extended and improved upon at later stages. It also ensures easy testing of core functionality.
-	\item The server should be able to process multiple images at once to ensure the real-time restriction is met for all clients of Willburg.
-\end{enumerate}
-\paragraph{Flexibility}
-\begin{enumerate}
-	\item The system should be able to perform correctly even while under strain due to bulk processing without any loss of data and ensuring the real-time restriction is met.
-	\item The system has been modularized to ensure both easy testing of components as well as addition of components without affecting the entire system.
-\end{enumerate}
-\paragraph{Maintainability}
-\begin{enumerate}
-	\item The system has been designed using technologies which offer user support and continuous updates for extra functionality.
-	\item The system has been well structured and documented to ensure future developers are able to understand and maintain the system.
-	\item The modular design of the system ensures that if changes must be made to a part of the system, only that part itself should be changed without affecting the rest of the system.
-\end{enumerate}
-\paragraph{Auditability}
-\begin{enumerate}
-	\item All images processed will be logged and traceable(user, date, time etc.) once pushed into the database.
-\end{enumerate}
-\paragraph{Cost}
-\begin{enumerate}
-	\item The tools used to design the system have been selected to be as open sourced as possible, free and not require a license for use.
-\end{enumerate}
+	\paragraph {Critical}
+		\subparagraph{Performance requirements and tactics}
+			\hfill \break
+			\hfill \break
+			\textbf{Requirements}
+			\begin{itemize}
+				\item Images which are processed are resized to improve detection as well as the speed at which they are processed by the server.
+				\item The system has been created with the most minimal and efficient coding practices possible, given that the result must still be reliable and robust.
+				\item The system needs to perform the processing of image as well as the identification of humans in under 2 seconds.
+			\end{itemize}
+			\hfill \break
+			\textbf{Tactics}
+				\begin{enumerate}
+					\item Thread pooling occurs when a request is received. If a thread is available, it is given to the request for handling. A queue structure is used to handle the thread pooling such that it will add a thread to the pool once the request is complete and pull a thread when there is an incoming request.
+					\item Threads are used to run multiple requests to inorder to spread the load accross time.
+				\end{enumerate}		
+		\subparagraph{Scalability requirements and tactics}
+			\hfill \break
+			\hfill \break
+			\textbf{Requirements}
+				\begin{itemize}
+					\item Modular programming has be used in order to ensure that there are no restrictions in terms of the systems ability to be extended and improved upon at later stages. It also ensures easy testing of core functionality.
+					\item The server should be able to process multiple images at once to ensure the real-time restriction is met for all clients of Willburg.
+					\item The system should be able to perform correctly even while under strain due to bulk processing without any loss of data and ensuring the real-time restriction is met.
+				\end{itemize}
+			\hfill \break	
+			\textbf{Tactics}
+				\begin{enumerate}
+					\item As stated in the previous section threads and thread pooling will be used to handle multiple request within the shortest amount possible. This will ensure that system is able to handle an increase in load without impact on the performance of the system.
+					\item Queueing is used to handle requests when the system is in high demand to ensure that no request is lost.
+				\end{enumerate}
+				
+			\subparagraph{Integratibility requirements and tactics}
+				\hfill \break
+				\hfill \break
+				\textbf{Requirements}
+					\begin{itemize}
+						\item The system will intergrate with the exisiting Willburg architecture and 
+					\end{itemize}
+				
+				\hfill \break
+				\textbf{Tactics}
+					\begin{enumerate}
+						\item 
+					\end{enumerate}
 
+			\subparagraph{Auditability}
+				\hfill \break
+				\hfill \break
+				\textbf{Requirements}
+					\begin{enumerate}
+						\item All images processed will be logged and traceable(user, date, time etc.) once pushed into the database.
+					\end{enumerate}
+				\hfill \break	
+				\textbf{Tactics}
+					\begin{enumerate}
+						\item Auditability will be implemented within the system via a log which will contain all transactions processed by the system. The application server will support specifying logging logic (advices) as crosscutting concerns within aspects or at least provide the ability to apply logging via interception.
+						\item Interception is used for auditability to ensure the system contains a full log of all events and details about which client launched the event. This will be useful in ensuring a response may linked to the respective client.
+					\end{enumerate}
+
+
+
+	\paragraph {Nice-to-have}
+
+		\subparagraph{Flexibility requirements}
+			\hfill \break
+			\hfill \break
+			\textbf{Requirements}
+				\begin{itemize}
+					\item The system should be able to perform correctly even while under strain due to bulk processing without any loss of data.
+					\item The system should be modularized to ensure both easy testing of components as well as addition of components without affecting the system.
+				\end{itemize}
+
+		\subparagraph{Maintainability requirements}
+			\hfill \break
+			\hfill \break
+			\textbf{Requirements}
+				\begin{itemize}
+					\item The system should be designed in technologies which offer user support and continuous updates for extra functionality.
+					\item The system must be well structured and documented to ensure future developers are able to understand and maintain the system.
+					\item The modular design of the system must be such that if changes must be made to a part of the system, only that part itself should be changed.
+				\end{itemize}
+		
+		\subparagraph{Reliability requirements}
+			\hfill \break
+			\hfill \break
+			\textbf{Requirements}
+				\begin{itemize}
+					\item The system must be thoroughly tested on the server side, to ensure it will not cause faults or problems.
+					\item The notification warning users will receive must be sent out immediately after the image has been processed in a real-time manner.
+				\end{itemize}
+		
+			
 \subsubsection{Architectural responsibilities}
 
 
@@ -162,234 +237,140 @@ design for the first level of granularity. It includes the allocation of archite
 architectural components, any tactics which should be used at the current level of granularity to
 address quality requirements
 
-\subsubsection {Architectural tactics}
-\paragraph{Thread pooling}
-\begin{enumerate}
-	\item Thread pooling is used to improve scalability within the system by handling mutiple requests from the server in order to be able to handle the load from their client base.
-\end{enumerate}
-\paragraph{Interception}
-\begin{enumerate}
-	\item Interception is used for auditability to ensure the system contains a full log of all events and details about which client launched the event. This will be useful in ensuring a response may linked to the respective client.
-\end{enumerate}
 \subsubsection {Architectural components addressing architectural responsibilities}
+	\begin{figure}[htb]
+		\centering
+		\includegraphics [scale=0.5]{../Diagrams/applicationServerResponsibiltiesAllocationZ.png}
+		\caption{PlaceHolder}
+	\end{figure}
 
 \subsubsection {Infrastructure}
 The layered architectural pattern provides an infrustructure which limits access of components within one layer to components which are either in the same or the next lower level layer. One of the strengths is that a layer can be easily replaced. In particular, one can add further access channels without changing any lower level layers within the software system.
 
-\section {Application Layer or Framework}
-\subsection {Software architecture requirements}
-\subsubsection {Quality requirements}
-\subsubsection {Architectural responsibilities}
 
-\subsection {Software architecture design for the persistence API}
-\subsubsection {Architectural tactics}
-\subsubsection {Architectural components}
-\subsubsection {Application component concepts and constraints}
-\subsubsection {Frameworks and technologies}
+\section {Image Processing System Architecture}
+This section specifies the requirements and design of the software architecture second level of granularity. The image processing service is responsible for the manipulation of an image and the detection of a human.
 
-\section {Application Server}
-The application server is the architectural component within which request for image processing is captured and handled. It is the component hosting the application processes layer of the application.
-
-\subsection {Software architecture requirements}
-The architectural requirements include the refined quality requirements and the architectural responsibilities. The architectural constraints for this lower level component are the same as for the system as a whole.
-
-\subsubsection {Quality requirements}
-Many of the quality requirements for the system needs to propagated to this lower level component.
-In particular, the scalability, maintainability, auditability and deployability requirements specified for the system as a whole are directly applicable for the application server. However some of the higher level requirements needs to be refined for this lower level component.
-
-\paragraph {Flexibility} 
-\hfill \break
- Flexibility requirements for the application server include:
-	\begin{itemize}
-		\item The ability to deploy versions of the system with minimum system down-time
-		\item The ablity to replace any lower level service with ease
-	\end{itemize}
-\paragraph {Reliability}
-\hfill \break
-	Reliability is required around the buisness processes themselves at this level of the business process layer.
-	In particular, we require that service contracts are either fully realized as per the service contract or that the calling entity is provided with a reason  for not providing the service.
-
-\paragraph {Testability}
-\hfill \break
-All services offered by the system must be testable through automated unit tests, testing components in isolation using mock objects, and automated integration tests where components are integrated within the actual environment.
-These functional tests should verify that the service is provided if all pre-conditions are met and that all post-conditions hold true once the service has been provided.
-
-\FloatBarrier
-\subsubsection {Architectural responsiblities}
-
-	\begin{figure}[htb]
-		\centering
-		\includegraphics  [scale=0.5]{../Diagrams/applicationServerResponsibiltiesZ.png}
-		\caption{The architectural responsibilities of the application server}
-	\end{figure}
-
-\FloatBarrier
-\subsection {Architecture design}
-\subsubsection {Tactics}
-\paragraph {Flexibility tactics}
-\hfill \break
-The chosen application server should concretely address the flexibility requirements. The application server should support: 
-	\begin {itemize}
-		\item hot-deployment, i.e. the ablility to deploy new versions of the system into the live enviroment with minimum downtime.
-		\item component (contract) based software development with dependency injection.
-	\end {itemize}
- 
-\paragraph {Maintainability tactics}
-\hfill \break
-The application server will be based on a public standard with multiple implementations including at least one open-source implementation of the standard being available.
-
-\paragraph {Reliability tactics}
-\hfill \break
-The application server must provide support for transactions which may enlist a variety of resources. In particular, the system requires the ability to commit across the persistence provider (i.e. the database). The transaction support should be declarative, i.e. that one specifies the transactional requirements and does not hard code transaction boundaries. This has the advantage that services can be reused across different business processes requiring different transactional boundaries. 
-
-\paragraph {Auditability tactics}
-\hfill \break
-Auditability will be implemented within the system via a log which will contain all transactions processed by the system. The application server will support specifying logging logic (advices) as crosscutting concerns within aspects or at least provide the ability to apply logging via interception.
-
-\paragraph {Testability tactics }
-\hfill \break
-The business process layer supports dependency injection through J-Unit. The application server will support hosting code which can be tested outside the application server.
-
-\subsubsection {Architectural components}
-	\begin{figure}[htb]
-		\centering
-		\includegraphics [scale=0.5]{../Diagrams/PersistanceResponsibiltiesAllocationZ.png}
-		\caption{The abstract components to which the architectural responsibilities are assigned}
-	\end{figure}
-
-\subsubsection {Application Component Concepts and Constraints}
-The central concept which will be used to specify application logic (the business processes) are the
-concepts of:
-	\begin {itemize}
-		\item a \textit{service contract} which encodes the requirements for a service
-		\item a \textit{service} which encodes the concrete implementation of a service. 
-	\end {itemize}
-These services which encapsulate the processes will be constrained to be stateless, i.e. no state
-is maintained across service requests.
-Long living state is maintained in domain objects which are typically persisted and which should
-not have any business logic.
-
-
-\subsubsection {Frameworks and technologies}
-JBoss
-Netty or MINA
-
-
-\paragraph {Concrete realization of architectural components}
-\hfill \break
-The Java-EE reference architecture addresses largely all the architectural responsibilities assigned to the application server.
-
-\paragraph {Tactics}
-\hfill \break
-With the exception of full aspect-oriented programming, Java-EE-7 supports all architectural tactics specified in the software architecture design for the application server.
-
-\subparagraph {Concrete realization of flexibility tactics  within Java-EE}
-\hfill \break
-Java-EE supports
-	\begin {itemize}
-		\item Java-EE is a component-based framework requiring decoupling through interfaces/contracts.
-		\item Hot-deployment is supported by most application servers including the most widely used
-open-source application servers like JBoss and Glassfish.
-		\item CDI (Context and Dependency Injection) is fully supported within Java-EE with dependency
-injection requested via @Inject annotations.
-	\end {itemize}
-
-\subparagraph {Concrete realization of maintainability tactics  within Java-EE}
-Java-EE is based on a public standard which is widely supported and hence the support for this technology is secured for the foreseeable future. The technology puts a rigorous framework in place for defining services within stateless session beans which are decoupled through interfaces/contracts. Maintainability is enhanced by dependency injection which allows for changing service providers at any level of granularity without making code changes. Furthermore the replacement of such new
-or improved functionality can be done within a live system using hot deployment.
-
-\subparagraph {Concrete realization of reliability tactics  within Java-EE}
-\hfill \break
-Java-EE uses thread-pooling, object-pooling, connection-pooling and clustering to improve scalability.
-
-\subparagraph {Concrete realization of security tactics  within Java-EE}
-\hfill \break
-
-\subparagraph {Concrete realization of testability tactics  within Java-EE}
-\hfill \break
-
-\paragraph {Application component concepts and constraints}
-
-
-\section {Persistence API}
-The persistence API provides abstracted access to a persistence to a persistence provider (database)
-whilst remaining decoupled from the database technology as well as the concrete database selected
-for the system. It also implements a range of tactics in order to concretely address quality requirements required from the persistence domain.
-
-\subsection {Software architecture requirements}
-The architectural requirements for the persistence API include the refined quality requirements and
-the architectural responsibilities. The architectural constraints for this lower level component are
-the same as for the system as a whole.
-
-\subsubsection {Quality requirements}
-Particularly, scalability, reliability, flexibility and maintainability are important for the persistence API.
-
-\paragraph {Scalability}
-\hfill \break
-Chosen persistance API should allow the future scaling of the infrastructure.
-
-\paragraph {Reliability}
-
-\paragraph {Flexibility}
-\hfill \break
-The chosen persistance API should be able to adapt to the rapidly changing persistance domain. This is especially important when it comes to different methods, such as relational and non-relational(NoSQL) databases, of storing data. \newline 
-The chosen persistance API should provide a layer of abstraction, allowing any transaction manager to be used. It is also important that the chosen persisitance API should not be locked into any specific persistance technology.
-
-\paragraph {Maintainability}
-\hfill \break
-The chosen persistance API should be a widely used API, it should also be in an advanced stage in its development life cycle. This is in order to ensure that information about the API is readily availble and widely understood. Inorder to be able to easily switch from one API implementation to another and to be able to gaurd against abondoning of technologies, if it is required for long term maintance, the API chosen should be a an open standard.
-
-\paragraph {Performance}
-
-\subsubsection {Architectural responsibilities}
-	\begin{figure}[htb]
-		\centering
-		\includegraphics  [scale=0.5]{../Diagrams/PersistanceResponsibiltiesZ.png}
-		\caption{The architectural responsibilities of the persistence API}
-	\end{figure}
-
-\subsection {Software architecture design for the persistence API}
-\subsubsection {Architectural tactics}
-The persistence API should use
-	\begin {itemize}
-		\item \textit{Object-Relational Mapping} to reduce code bulk, improve maintainability and allow for decoupling from the 		persistence provider
+	\subsection {Application server}
+	This section specifies the the software architecture requirements and design for the application server*
+		\subsubsection {Software architecture requirements}
+		The architectural requirements include the refined quality requirements and the architectural responsibilities. The architectural constraints for this lower level component are the same as for the system as a whole.
 		
-		\item \textit{Query mapping} from queries across a graph of Java objects onto the database queries used in the selected database technology and provider
+			\paragraph {Access and Integration Requirements}
+				\subparagraph {Access Channel Requirements}
+					The application server* will address the first interaction between the existing server and the application. 
+				\subparagraph {Integration Channel Requirements}
+					The server application* must integrate with the image procsessing system in order for images to be pulled from the server.	
+			
+			\FloatBarrier
+			\paragraph {Architectural responsiblities}
+				\hfill \break
+				The architectural responsibilities of the 	application server*
+				\begin{figure}[H]
+					\centering
+					\includegraphics  [scale=0.5]{../Diagrams/applicationServerResponsibiltiesZ.png}
+					\caption{The architectural responsibilities of the application server}
+				\end{figure}		
+		
+		\subsubsection {Architecture design}	
+			\FloatBarrier	
+			\paragraph {Architectural components}
+			\hfill \break
+				The architectural responsibility allocation the application server*			
+				\begin{figure}[htb]
+					\centering
+					\includegraphics [scale=0.5]{../Diagrams/applicationServerResponsibiltiesAllocationZ.png}
+					\caption{The abstract components to which the architectural responsibilities are assigned}
+				\end{figure}
+			
+			\paragraph {Application component concepts and constraints}
+			The central concept which will be used to specify application logic (the business processes) are the
+			concepts of:
+				\begin {itemize}
+					\item a \textit{service contract} which encodes the requirements for a service
+					\item a \textit{service} which encodes the concrete implementation of a service. 
+				\end {itemize}
+			These services which encapsulate the processes will be constrained to be stateless, i.e. no state
+			is maintained across service requests.
+			Long living state is maintained in domain objects which are typically persisted and which should
+			not have any business logic.
+			
+			\paragraph {Frameworks and technologies}
+			\hfill \break
+			The Spring Framework is an application framework and inversion of control container for the Java platform. The framework's core features can be used by any Java application, but there are extensions for building web applications on top of the Java EE platform. Although the framework does not impose any specific programming model, it has become popular in the Java community as an alternative to, replacement for, or even addition to the Enterprise JavaBeans (EJB) model. The Spring Framework is open source.
+			
+				\subparagraph {Concrete realization of architectural components}
+				\hfill \break
+				The Java-EE reference architecture addresses largely all the architectural responsibilities assigned to the application server.
+				
+				\subparagraph {Tactics}
+				\hfill \break
+				With the exception of full aspect-oriented programming, Java-EE-7 supports all architectural tactics specified in the software architecture design for the application server.
+				
+			\paragraph {Concrete realization of flexibility tactics  within Java-EE}
+			\hfill \break
+			Java-EE supports
+				\begin {itemize}
+					\item Java-EE is a component-based framework requiring decoupling through interfaces/contracts.
+					\item Hot-deployment is supported by most application servers including the most widely used
+			open-source application servers like JBoss and Glassfish.
+					\item CDI (Context and Dependency Injection) is fully supported within Java-EE with dependency
+			injection requested via @Inject annotations.
+				\end {itemize}
+			
+			\paragraph {Concrete realization of maintainability tactics  within Java-EE}
+			Java-EE is based on a public standard which is widely supported and hence the support for this technology is secured for the foreseeable future. The technology puts a rigorous framework in place for defining services within stateless session beans which are decoupled through interfaces/contracts. Maintainability is enhanced by dependency injection which allows for changing service providers at any level of granularity without making code changes. Furthermore the replacement of such new
+			or improved functionality can be done within a live system using hot deployment.
+			
+			\paragraph {Concrete realization of reliability tactics  within Java-EE}
+			\hfill \break
+			Java-EE uses thread-pooling, object-pooling, connection-pooling and clustering to improve scalability.
 
-		\item \textit{Object caching} to improve scalability and performance
 
-		\item \textit{Transactions} with 2-phase commit to improve reliability of processes.
 
-		\item \textit{Connection pooling} to improve performance and scalability.
-	\end {itemize}
 
-\subsubsection {Architectural components}
-
-\subsubsection {Application component concepts and constraints}
-	\begin {itemize}
-		\item \textit{Domain objects} (entities) which host long-living state. These entities hold no logic and is known as Plain Old Java Objects (POJO's) in the Java architecture.
-
-		\item \textit{Queries across object graph of domain objects } through which the required information of state in the domain objects retreived or modified.
-	\end {itemize}
-\subsubsection {Frameworks and technologies}
-A JPA (Java Persistence API) provider will be used as a persistence API. The concrete implementation used for the chosen API is Hibernate. Hibernate has support for both relational and non-relational databases. IT is also widely used, has good community support and is well documented. Performance plays a significant role in the system as it is a real-time system and Hibernate is one of the top open-source persistance implementations in terms of performance. \newline
-Because JPA is a widely used and supported standard it has many implementations, such as:
-	\begin {itemize} 
-		\item iBATIS
-		\item Hibernate
-		\item EclipseLink
-	\end {itemize} 
-
-The persistence context (EntityManager) will be dependency injected into services requiring access to persistent data. JPA provider do implement
-
-	\begin {itemize} 
-		\item \textit{Object-relational mapping} including mapping of relationships between objects via a provided ORM
-		\item \textit{query mapping} from object-oriented queries across the domain objects graph to queries for a specific database provider (e.g. ontio SQL)
-		\item\textit{object caching} (within the persistence context)
-		\item \textit{transaction support} though the Java Transation API
-		\item \textit{connection pooling} through a JCA connector based implementation of a JDBC driver
-	\end {itemize} 
-
-Queries will be specified as Spring Data JPA queries.
-
+	\subsection {Image processing}
+	This section specifies the the software architecture requirements and design for the image processing application.
+		\subsubsection {Software architecture requirements}
+		The architectural requirements include the refined quality requirements and the architectural responsibilities. The architectural constraints for this lower level component are the same as for the system as a whole.
+		
+			\paragraph {Access and Integration Requirements}
+				\subparagraph {Access Channel Requirements}
+					The image processing application will address the manipulation of images and identification of humans.
+				\subparagraph {Integration Channel Requirements}
+					The  image processing application must integrate with the image procsessing system in order for images to be processed.	
+			
+			\FloatBarrier
+			\paragraph {Architectural responsiblities}
+				\hfill \break
+				The architectural responsibilities of the 	application server*
+				\begin{figure}[H]
+					\centering
+					\includegraphics  [scale=0.5]{../Diagrams/applicationServerResponsibiltiesZ.png}
+					\caption{The architectural responsibilities of the image processing application}
+				\end{figure}		
+		
+		\subsubsection {Architecture design}	
+			\FloatBarrier	
+			\paragraph {Architectural components}
+			\hfill \break
+				The architectural responsibility allocation the application server*			
+				\begin{figure}[htb]
+					\centering
+					\includegraphics [scale=0.5]{../Diagrams/applicationServerResponsibiltiesAllocationZ.png}
+					\caption{The abstract components to which the  image processing applicatio}
+				\end{figure}
+			
+			\paragraph {Frameworks and technologies}
+			\hfill \break
+			OpenCV (Open Source Computer Vision) is a library of programming functions mainly aimed at real-time computer vision. The library is cross-platform and free for use under the open-source BSD license.
+			
+				\subparagraph {Concrete realization of architectural components}				
+				
+					\subsubparagraph {Concrete realization of human detection}
+					OpenCV histogram of oriented gradients (HOG) which is a feature descriptor used to detect objects in computer vision and image processing. The HOG descriptor technique counts occurrences of gradient orientation in localized portions of an image - detection window, or region of interest (ROI). OpenCV offers a default implementation in conjunction HOG descriptor to detect humans called \texttt{people\_detection}.
+					
+					\subsubparagraph {Concrete realization of image manipulation}
+						OpenCV has implemented functions that allow image to be manipulated. Such as enlarging the image or grayscaling it. 
+				
 \end{document}
