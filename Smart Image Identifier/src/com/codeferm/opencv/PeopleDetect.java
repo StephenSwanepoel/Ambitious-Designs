@@ -13,4 +13,6 @@ public interface PeopleDetect {
 	void generateImage(BufferedImage image, Mat mat, byte[] data);
 	void processImage(String url) throws IOException;
 	void processVideo(String url);
+	void runTests(String url) throws IOException;
+	
 }
