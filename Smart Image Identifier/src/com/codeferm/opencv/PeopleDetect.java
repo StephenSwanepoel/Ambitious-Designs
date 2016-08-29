@@ -10,7 +10,7 @@ public interface PeopleDetect {
 	Mat equalization(BufferedImage image, Mat mat);
 	Mat enlargeImage(BufferedImage image, Mat mat);
 	Mat generateMat(BufferedImage image);
-	void generateImage(BufferedImage image, Mat mat, byte[] data);
-	void processImage(String url) throws IOException;
 	void processVideo(String url);
+	void runTests(String url) throws IOException;
+	
 }
