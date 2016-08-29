@@ -12,24 +12,14 @@ package com.codeferm.opencv.DefualtImpl;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 //Libraries required for logging system events
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-
-
-
-
 //Library required for read/write operations for images
 import javax.imageio.ImageIO;
-
-
-
-
 //Libraries required for creating BufferedImage instances
 import java.awt.image.*;
-
 //Libraries required for defining mat objects as well as
 //performing various operations on them
 import org.opencv.core.Core;
@@ -53,8 +43,6 @@ import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;
 import org.opencv.videoio.Videoio;
 
-import com.codeferm.opencv.ImagePopup;
-
 @SuppressWarnings({ "checkstyle:magicnumber", "PMD.LawOfDemeter", "PMD.AvoidLiteralsInIfCondition",
         "PMD.AvoidInstantiatingObjectsInLoops", "PMD.AvoidUsingNativeCode", "PMD.AvoidFinalLocalVariable",
         "PMD.CommentSize", "PMD.AvoidPrintStackTrace", "PMD.UseProperClassLoader", "PMD.AvoidPrefixingMethodParameters",
@@ -72,13 +60,9 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      */
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        //System.load("lib/openh264-1.4.0-win64msvc.dll");
         //System.loadLibrary("E:\\Software\\OpenCV\\openCV3.1\\opencv\\build\\java\\x64\\openh264-1.4.0-win64msvc.dll");
-        //System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
+        System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
     }
-    private boolean[] successfulTests = new boolean[3];
-    private ImagePopup pop;
-    
     
     /**
      * Method which takes two arguments, improving luminance, which is by far more important 
@@ -105,6 +89,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     	
     	Mat mat2 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC1);
         Imgproc.equalizeHist(mat, mat2);
+    	//Imgcodecs.imwrite("./output/test3.jpg", mat1);
         
     	return mat2;
     }
@@ -118,8 +103,9 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     public Mat enlargeImage(BufferedImage image, Mat mat){
     	
     	Mat mat2 = new Mat();
-    	Imgproc.resize(mat, mat2, new Size(640,640));
-//    	Imgproc.resize(mat, mat2, new Size(480,640));
+    	Imgproc.resize(mat, mat2, new Size(480,640));
+    	//Imgproc.resize(resizeimage, size);
+    	
     	return mat2;
     }
     
@@ -144,141 +130,62 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      * @param mat a Mat object which is used to duplicate an image
      * @param data provides pixel writing capabilities - image.getRaster()
      */
-    public void generateImage(BufferedImage image, Mat mat, byte[] data, String url, char type){
+    public void generateImage(BufferedImage image, Mat mat, byte[] data){
     	
     	//Create an image file to store the mat object into (Same dimensions as original image)
     	BufferedImage output = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_BYTE_GRAY);
     	output.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), data);
     	//Write the contents of the mat object to the output variable
-    	String outputFile = "./output/";
-    	String img = url.substring(12);
-    	switch(type)
-    	{    	
-	    	case 'N':
-	    		outputFile += "normal/" + img;
-	    		Imgcodecs.imwrite(outputFile, mat);
-	    		pop.popup(outputFile);
-	    		break;
-	    	case 'G':
-	    		outputFile += "greyScale/" + img;
-	    		Imgcodecs.imwrite(outputFile, mat);
-	    		pop.popup(outputFile);
-	    		break;
-	    	case 'E':
-	    		outputFile += "EQ/" + img;
-	    		Imgcodecs.imwrite(outputFile, mat);
-	    		pop.popup(outputFile);
-	    		break;
-    	}    	
-    	
-    	
-    }
-    
-    /**
-     * Method used to run multiple tests on an image for human detection, atleast 66% of tests must 
-     * be passed in order for human detection to be successful
-     * @param url a String containing the location of an image
-     * @throws IOException
-     */
-    public void runTests(String url) throws IOException{
-    	
-    	pop = new ImagePopupImplementation(); 
-    	
-    	try{
-	    	final long startTime = System.currentTimeMillis();
-
-    		File input = new File(url);
-	        BufferedImage image = ImageIO.read(input);
-	        Mat mat = generateMat(image);
-	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-	        
-	        //Resize image	    	
-	        mat = enlargeImage(image,mat);	    	
-	    	Mat mat2 = greyScale(image,mat);	
-	    	Mat mat3 = equalization(image,mat2);
-	    		    	
-	    	logger.log(Level.INFO, "Initialising Tests");
-	    	//Test 1 - Resize image + normal 
-	    	logger.log(Level.INFO, "Processing standard image");
-    		successfulTests[0] = processImage(mat, image, data, url, 'N');
-    		
-    		//Test 2 - Resize image + greyscale 
-    		logger.log(Level.INFO, "Processing greyscaled image");    		
-    		successfulTests[1] = processImage(mat2, image, data, url, 'G');
-    		    		   		
-    		//Test 3 - Resize image + equalisation   		
-    		logger.log(Level.INFO, "Processing equalise image");    		
-    		successfulTests[2] = processImage(mat3, image, data, url, 'E');
-    		    		
-    		logger.log(Level.INFO, "Tests complete");
-    		
-    		int count = 0;
-    		for (int i=0; i<3; i++){
-    			if (successfulTests[i] == true)
-    				count++;
-    		}
-    		
-    		final long estimatedTime = System.currentTimeMillis() - startTime;
-	        final double seconds = (double) estimatedTime / 1000;
-	        logger.log(Level.INFO, String.format("--------------------------------------------------------"));
-    		logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
-    		
-    		if (count >= 2)
-    		{
-    			try {
-    				TimeUnit.SECONDS.sleep(5);
-    			} catch (InterruptedException e) {
-    			}
-    			logger.log(Level.INFO, "Human Detected!");
-    			
-    		}
-    		else
-    			logger.log(Level.INFO, "No Human Detected!"); 
-    		
-    		
-    		pop.ClosePopup();
-    	}
-    	catch (Exception e) {
-	        System.out.println("Error: " + e.getMessage());
-	    }
+    	Imgcodecs.imwrite("./output/test.jpg", mat);
     }
     
     /**
      * Method which processes an image for human detection
-     * @param image image a BufferedImage object used to create a new mat with the same dimensions
-     * @param mat a Mat object which is used to duplicate an image
-     * @param data provides pixel writing capabilities - image.getRaster()
+     * @param url a String containing the location of an image
      * @throws IOException
      */
-     boolean processImage(Mat mat, BufferedImage image, byte[] data, String url, char type) throws IOException{
-    	 
+    public void processImage(String url) throws IOException{
+    	
     	try{    
+	    	File input = new File(url);
+	        BufferedImage image = ImageIO.read(input);
+	        Mat mat = generateMat(image);
+	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+
+	        //mat = greyScale(image, mat);
+	        //mat = equalization(image,mat);
 	        	        
 	        //Initialise and set hog descriptor to "people detector"
 	        final HOGDescriptor hog = new HOGDescriptor();
+	        //hog.load("C:\\Users\\Stephen\\Desktop\\Smart Image Identifier\\src\\xml\\haarcascade_fullbody.xml");
+	       // hog.setSVMDetector(_svmdetector);
 	    	hog.setSVMDetector(HOGDescriptor.getDefaultPeopleDetector());
 	    	//Initialise variables to identify humans in the image / video 
 	    	//by locating box points to form a rectangle around the detected object
-	    	MatOfRect found = new MatOfRect();	    	
+	    	MatOfRect found = new MatOfRect();
+	    	//Resize image	    	
+	    	mat = enlargeImage(image,mat);
 	    	MatOfDouble weight = new MatOfDouble();
 	    	//Colour of rectangle to be drawn onto image
 	    	final Scalar rectColor = new Scalar(0, 255, 0); 
-	        
-	        boolean detected = false;
+	        final long startTime = System.currentTimeMillis();
+	        Boolean detected = false;
     		//Detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles
-    		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.025, 2, false);    		
-    		if (found.rows() > 0) {
+    		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.025, 2, false);
+	    	if (found.rows() > 0) {
 	    		detected = true;
 	    		final List<Rect> rectList = found.toList();
                 for (final Rect rect : rectList) {
                     //Draw rectangle around found object
-                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);                      
+                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);  
+                    
                 }
-    	    	generateImage(image, mat, data, url, type);
+    	    	generateImage(image, mat, data);
             }	    	
 	    	
-	    	
-	        
+	    	final long estimatedTime = System.currentTimeMillis() - startTime;
+	        final double seconds = (double) estimatedTime / 1000;
+	        logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
 	        
 	        //Release memory
 	        found.release();
@@ -286,15 +193,13 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	        mat.release();
 	        
 	        if (detected)
-	        	return true;
-	        	
-	        else
-		        return false;
+	        	logger.log(Level.INFO, "Human Detected!");
+	        else 
+	        	logger.log(Level.INFO, "No Human Detected!");
 	     
-    	 } catch (Exception e) {
+    	} catch (Exception e) {
 	        System.out.println("Error: " + e.getMessage());
-	     }
-    	return false;
+	     } 	
     }
     
     /**
