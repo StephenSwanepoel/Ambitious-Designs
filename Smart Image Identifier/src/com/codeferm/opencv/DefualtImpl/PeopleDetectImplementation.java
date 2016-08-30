@@ -68,6 +68,8 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
         //System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
     }
     private boolean[] successfulTests = new boolean[3];
+    private ImagePopup pop;
+    
     /**
      * Method which takes two arguments, improving luminance, which is by far more important 
      * in distinguishing visual features
@@ -145,14 +147,17 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	    	case 'N':
 	    		outputFile += "normal/" + img;
 	    		Imgcodecs.imwrite(outputFile, mat);
+	    		pop.popup(outputFile);
 	    		break;
 	    	case 'G':
 	    		outputFile += "greyScale/" + img;
 	    		Imgcodecs.imwrite(outputFile, mat);
+	    		pop.popup(outputFile);
 	    		break;
 	    	case 'E':
 	    		outputFile += "EQ/" + img;
 	    		Imgcodecs.imwrite(outputFile, mat);
+	    		pop.popup(outputFile);
 	    		break;
     	}
     }
@@ -165,7 +170,11 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      */
     public void runTests(String url) throws IOException{
     	
+    	pop = new ImagePopupImplementation(); 
+    	
     	try{
+    		final long startTime = System.currentTimeMillis();
+    		
     		File input = new File(url);
 	        BufferedImage image = ImageIO.read(input);
 	        Mat mat = generateMat(image);
@@ -197,10 +206,23 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     				count++;
     		}
     		
+    		final long estimatedTime = System.currentTimeMillis() - startTime;
+	        final double seconds = (double) estimatedTime / 1000;
+	        logger.log(Level.INFO, String.format("--------------------------------------------------------"));
+    		logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
+    		
     		if (count >= 2)
-    			logger.log(Level.INFO, "Human Detected!");
+    		{
+	    		try {
+	    			TimeUnit.SECONDS.sleep(5);
+	    		} catch (InterruptedException e) {
+	    		}
+	    		logger.log(Level.INFO, "Human Detected!");
+    		}
     		else
     			logger.log(Level.INFO, "No Human Detected!");
+    			
+    		pop.ClosePopup();
     	}
     	catch (Exception e) {
 	        System.out.println("Error: " + e.getMessage());
@@ -227,7 +249,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	    	MatOfDouble weight = new MatOfDouble();
 	    	//Colour of rectangle to be drawn onto image
 	    	final Scalar rectColor = new Scalar(0, 255, 0); 
-	        final long startTime = System.currentTimeMillis();
+
 	        boolean detected = false;
     		//Detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles
     		hog.detectMultiScale(mat, found, weight, 0, new Size(8, 8), new Size(32, 32), 1.025, 2, false);    		
@@ -240,10 +262,6 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
                 }
     	    	generateImage(image, mat, data, url, type);
             }	    	
-	    	
-	    	final long estimatedTime = System.currentTimeMillis() - startTime;
-	        final double seconds = (double) estimatedTime / 1000;
-	        logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
 	        
 	        //Release memory
 	        found.release();
