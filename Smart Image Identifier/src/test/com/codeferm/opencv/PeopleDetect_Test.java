@@ -97,7 +97,7 @@ public class PeopleDetect_Test {
 
 	@Test
 	public void testGenerateImage() {
-		try{
+		/*try{
 			File input = new File("./Test/Test_Sources/test2.jpg");
 			BufferedImage image;		
 			image = ImageIO.read(input);
@@ -113,7 +113,8 @@ public class PeopleDetect_Test {
 		catch (Exception e)
 		{
 			
-		}
+		}*/
+		fail("Not yet implemented");
 	}
 
 	@Test
