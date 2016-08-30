@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 
@@ -17,11 +18,13 @@ public class Main {
 		File folder = new File("./resources");
 		File[] listOfFiles = folder.listFiles();
 		
-		for(int i=0; i< listOfFiles.length; i++)
+		while(true)
 		{
-			System.out.println(listOfFiles[i].getPath());
-			if(listOfFiles[i].getPath().contains(".jpg"))
-				p.runTests(listOfFiles[i].getPath());
+			for(int i=0; i< listOfFiles.length; i++)
+			{
+				if(listOfFiles[i].getPath().contains(".jpg"))
+					p.runTests(listOfFiles[i].getPath());
+			}
 		}
 	}
     
