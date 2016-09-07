@@ -12,6 +12,7 @@ package com.codeferm.opencv.DefualtImpl;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 //Libraries required for logging system events
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -343,7 +344,6 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
    
     }
 
-	@Override
 	public void processImage(String url) throws IOException {
 		// TODO Auto-generated method stub
 		
