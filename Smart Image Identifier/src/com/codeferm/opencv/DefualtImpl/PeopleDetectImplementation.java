@@ -63,9 +63,6 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      */
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        //System.load("lib/openh264-1.4.0-win64msvc.dll");
-        //System.loadLibrary("E:\\Software\\OpenCV\\openCV3.1\\opencv\\build\\java\\x64\\openh264-1.4.0-win64msvc.dll");
-        //System.load("C:\\Users\\Johan\\workspace\\Smart Image Identifier\\lib\\openh264-1.4.0-win64msvc.dll");
     }
     private boolean[] successfulTests = new boolean[3];
     private ImagePopup pop;
@@ -140,22 +137,30 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     	BufferedImage output = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_BYTE_GRAY);
     	output.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), data);
     	//Write the contents of the mat object to the output variable
-    	String outputFile = "./output/";
-    	String img = url.substring(12);
+    	String outputFile = ".\\output\\database\\";
+    	String img;
+    	
+    	//Database images
+    	if (url.contains("database"))
+    		img = url.substring(21);
+    	//Standard images in resource folder
+    	else 
+    		img = url.substring(12);
+    		
     	switch(type)
     	{    	
 	    	case 'N':
-	    		outputFile += "normal/" + img;
+	    		outputFile += "normal\\" + img;
 	    		Imgcodecs.imwrite(outputFile, mat);
 	    		pop.popup(outputFile);
 	    		break;
 	    	case 'G':
-	    		outputFile += "greyScale/" + img;
+	    		outputFile += "greyScale\\" + img;
 	    		Imgcodecs.imwrite(outputFile, mat);
 	    		pop.popup(outputFile);
 	    		break;
 	    	case 'E':
-	    		outputFile += "EQ/" + img;
+	    		outputFile += "EQ\\" + img;
 	    		Imgcodecs.imwrite(outputFile, mat);
 	    		pop.popup(outputFile);
 	    		break;
@@ -208,7 +213,6 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     		
     		final long estimatedTime = System.currentTimeMillis() - startTime;
 	        final double seconds = (double) estimatedTime / 1000;
-	        logger.log(Level.INFO, String.format("--------------------------------------------------------"));
     		logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
     		
     		if (count >= 2)
@@ -223,6 +227,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
     			logger.log(Level.INFO, "No Human Detected!");
     			
     		pop.ClosePopup();
+    		logger.log(Level.INFO, String.format("--------------------------------------------------------"));
     	}
     	catch (Exception e) {
 	        System.out.println("Error: " + e.getMessage());
