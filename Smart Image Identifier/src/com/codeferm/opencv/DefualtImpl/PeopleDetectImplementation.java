@@ -12,6 +12,7 @@ package com.codeferm.opencv.DefualtImpl;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 //Libraries required for logging system events
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -45,6 +46,8 @@ import org.opencv.objdetect.HOGDescriptor;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;
 import org.opencv.videoio.Videoio;
+
+import com.codeferm.opencv.ImagePopup;
 
 @SuppressWarnings({ "checkstyle:magicnumber", "PMD.LawOfDemeter", "PMD.AvoidLiteralsInIfCondition",
         "PMD.AvoidInstantiatingObjectsInLoops", "PMD.AvoidUsingNativeCode", "PMD.AvoidFinalLocalVariable",
@@ -341,7 +344,6 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
    
     }
 
-	@Override
 	public void processImage(String url) throws IOException {
 		// TODO Auto-generated method stub
 		
