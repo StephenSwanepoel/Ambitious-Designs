@@ -3,16 +3,15 @@ package test.com.codeferm.opencv;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +26,12 @@ public class PeopleDetect_Test {
 	public void creatingPeopleDetect()
 	{
 		detect = new PeopleDetectImplementation();
+	}
+	
+	@After
+	public void Destructer_PeopleDetect()
+	{
+		detect = null;
 	}
 	
 	
@@ -54,7 +59,18 @@ public class PeopleDetect_Test {
 
 	@Test
 	public void testEqualization() {
-		fail("Not yet implemented");
+		try {
+			File input = new File("./Test/Test_Sources/test2.jpg");
+			BufferedImage image;	
+			image = ImageIO.read(input);
+			Mat mat = detect.generateMat(image);
+			mat = detect.greyScale(image, mat);
+			mat = detect.equalization(image, mat);
+			
+			assertEquals(false ,mat.empty());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -70,7 +86,7 @@ public class PeopleDetect_Test {
 			mat = detect.enlargeImage(image, mat);
 			
 			assertEquals(640, mat.height());
-			assertEquals(480, mat.width());	
+			assertEquals(640, mat.width());	
 		} catch (IOException e) {
 			
 		}
@@ -97,24 +113,28 @@ public class PeopleDetect_Test {
 
 	@Test
 	public void testGenerateImage() {
-		/*try{
-			File input = new File("./Test/Test_Sources/test2.jpg");
-			BufferedImage image;		
-			image = ImageIO.read(input);
-			Mat mat = detect.generateMat(image);
-			byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+		try{
+			String url = "./Test/Test_Sources/test2.jpg";			
+			detect.runTests(url);
+			Boolean generatedImage = false;
 			
-			detect.generateImage(image, mat, data);
-			File f = new File("./output/test.jpg");
-			
-			assertEquals(true, f.exists());
+			File folder = new File(".\\output\\database\\normal\\");
+			File[] listOfFiles = folder.listFiles();
+			for(int i=0; i<listOfFiles.length; i++)
+			{
+				
+				if(listOfFiles[i].getName().equals("test2.jpg"))
+				{
+					generatedImage = true;
+				}
+			}
+			assertEquals(generatedImage, true);
 			
 		}
 		catch (Exception e)
 		{
 			
-		}*/
-		fail("Not yet implemented");
+		}
 	}
 
 	@Test
@@ -125,6 +145,12 @@ public class PeopleDetect_Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void test_runTests()
+	{
 		fail("Not yet implemented");
 	}
 
