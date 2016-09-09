@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Base64;
 import javax.imageio.ImageIO;
 
+import com.codeferm.opencv.PeopleDetection;
+import com.codeferm.opencv.PeopleDetectionRequest;
+import com.codeferm.opencv.DefualtImpl.Image;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
@@ -19,7 +22,7 @@ public class Database {
 	 /**
      * Method which connects to the database and pulls records 
      */
-	public static Boolean main(String[] args) {
+	public static void main(String[] args) {
 		try {
         //=================== CONNECT TO DB ========================
 		mongoClient = new MongoClient("localhost", 27017);
@@ -28,13 +31,13 @@ public class Database {
 		System.out.println("Connected to database successfully.");
 		readDatabase();
 		
-		return true;
+		//return true;
 		
 		} catch (Exception e) {
             System.err.println(e.getClass().getName()+": "+e.getMessage());
         }
 		
-		return false;
+		//return false;
 	}
 	
 	 /**
@@ -61,6 +64,7 @@ public class Database {
      */
 	public static void readDatabase() throws IOException
     {
+		
         BasicDBObject query = new BasicDBObject();
     	BasicDBObject field = new BasicDBObject();
         	field.put("attachments", 0);
@@ -68,8 +72,10 @@ public class Database {
     	attachments.put("attachments.fields",java.util.regex.Pattern.compile("")); 
         
         DBCursor items = db.getCollection("Willburg").find(query,field);
-        DBCursor items2 = db.getCollection("Willburg").find(query,attachments);    
-                
+        DBCursor items2 = db.getCollection("Willburg").find(query,attachments);
+        
+        Image image = new Image();
+              
         for(int i=0; i<50; i++)
         {
         	BasicDBObject obj = (BasicDBObject) items.next();
@@ -83,7 +89,14 @@ public class Database {
             BufferedImage img = getImage(encoding.getBytes());
             //Write the image to a file
             File outputfile = new File("./resources/database/"+ ID +".jpg");
-            ImageIO.write(img, "jpg", outputfile);
+            ImageIO.write(img, "jpg", outputfile);            
+            
+            
+            image.setURL("./resources/database/"+ ID +".jpg");
+            image.setID(ID);
+            
+            new PeopleDetection().ProcessImage(new PeopleDetectionRequest(image));          
+            
         }
     }	
 	

@@ -1,12 +1,8 @@
 package test.com.codeferm.opencv;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -15,12 +11,20 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.codeferm.opencv.*;
-import com.codeferm.opencv.DefualtImpl.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.opencv.core.Mat;
+
+import com.codeferm.opencv.PeopleDetection;
+import com.codeferm.opencv.PeopleDetectionRequest;
+import com.codeferm.opencv.DefualtImpl.Image;
+import com.codeferm.opencv.DefualtImpl.PeopleDetectImplementation;
+import com.codeferm.opencv.DefualtImpl.PeopleDetectionResponse;
 
 public class PeopleDetect_Test {
 
-	private PeopleDetect detect;
+	private PeopleDetectImplementation detect;
 	
 	@Before
 	public void creatingPeopleDetect()
@@ -38,7 +42,7 @@ public class PeopleDetect_Test {
 	@Test  
 	public void testGreyScale() {
 		try {
-			File input = new File("./Test/Test_Sources/test.jpg");
+			File input = new File("./resources/human3.jpg");
 	        BufferedImage image = ImageIO.read(input);
 	        Mat mat = detect.generateMat(image);
 			
@@ -60,7 +64,7 @@ public class PeopleDetect_Test {
 	@Test
 	public void testEqualization() {
 		try {
-			File input = new File("./Test/Test_Sources/test2.jpg");
+			File input = new File("./resources/human3.jpg");
 			BufferedImage image;	
 			image = ImageIO.read(input);
 			Mat mat = detect.generateMat(image);
@@ -77,7 +81,7 @@ public class PeopleDetect_Test {
 	public void testEnlargeImage() {
 		
 		try {
-			File input = new File("./Test/Test_Sources/test2.jpg");
+			File input = new File("./resources/human3.jpg");
 			BufferedImage image;		
 			image = ImageIO.read(input);
 			
@@ -97,7 +101,7 @@ public class PeopleDetect_Test {
 	public void testGenerateMat() {
 		
 		try{
-			File input = new File("./Test/Test_Sources/test2.jpg");
+			File input = new File("./resources/human3.jpg");
 			BufferedImage image;		
 			image = ImageIO.read(input);
 		
@@ -114,7 +118,7 @@ public class PeopleDetect_Test {
 	@Test
 	public void testGenerateImage() {
 		try{
-			String url = "./Test/Test_Sources/test2.jpg";			
+			String url = "./resources/human3.jpg";			
 			detect.runTests(url);
 			Boolean generatedImage = false;
 			
@@ -123,7 +127,7 @@ public class PeopleDetect_Test {
 			for(int i=0; i<listOfFiles.length; i++)
 			{
 				
-				if(listOfFiles[i].getName().equals("test2.jpg"))
+				if(listOfFiles[i].getName().equals("human3.jpg"))
 				{
 					generatedImage = true;
 				}
@@ -135,6 +139,31 @@ public class PeopleDetect_Test {
 		{
 			
 		}
+	}
+	
+	@Test
+	public void testPeopleDetection()
+	{
+		Image img = new Image();
+		img.setURL("./resources/human3.jpg");
+		img.setID("test2");
+		
+		PeopleDetectionResponse p = new PeopleDetection().ProcessImage(new PeopleDetectionRequest(img));
+		assertNotNull(p);
+		
+		Boolean generatedImage = false;
+		
+		File folder = new File(".\\output\\database\\normal\\");
+		File[] listOfFiles = folder.listFiles();
+		for(int i=0; i<listOfFiles.length; i++)
+		{
+			
+			if(listOfFiles[i].getName().equals("human3.jpg"))
+			{
+				generatedImage = true;
+			}
+		}
+		assertEquals(generatedImage, true);
 	}
 
 	@Test

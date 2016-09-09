@@ -2,15 +2,15 @@ package com.codeferm.opencv;
 
 import com.codeferm.opencv.DefualtImpl.Image;
 
-public class ProcessImageRequest {
+public class PeopleDetectionRequest {
 	private Image image;
 	
-	public ProcessImageRequest()
+	public PeopleDetectionRequest()
 	{
 		this.image = null;
 	}
 	
-	public ProcessImageRequest(Image image)
+	public PeopleDetectionRequest(Image image)
 	{
 		this.image = image;
 	}
