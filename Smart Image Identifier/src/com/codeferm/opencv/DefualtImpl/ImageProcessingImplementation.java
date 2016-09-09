@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import com.codeferm.opencv.PeopleDetection;
 import com.codeferm.opencv.PeopleDetect;
-import com.codeferm.opencv.ProcessImageRequest;
+import com.codeferm.opencv.PeopleDetectionRequest;
 
 public class ImageProcessingImplementation {
 
-	public ProcessImageResponse ProcessImage(ProcessImageRequest request) {
+	public PeopleDetectionResponse ProcessImage(PeopleDetectionRequest request) {
 		
 		/*PeopleDetect detect = new PeopleDetectImplementation();
 		
@@ -18,7 +18,7 @@ public class ImageProcessingImplementation {
 			e.printStackTrace();
 		}
 		
-		*/ProcessImageResponse response = new ProcessImageResponse();
+		*/PeopleDetectionResponse response = new PeopleDetectionResponse();
 		return response;
 	}
 

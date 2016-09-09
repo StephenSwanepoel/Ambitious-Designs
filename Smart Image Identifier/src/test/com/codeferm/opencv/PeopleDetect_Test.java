@@ -17,10 +17,10 @@ import org.junit.Test;
 import org.opencv.core.Mat;
 
 import com.codeferm.opencv.PeopleDetection;
-import com.codeferm.opencv.ProcessImageRequest;
+import com.codeferm.opencv.PeopleDetectionRequest;
 import com.codeferm.opencv.DefualtImpl.Image;
 import com.codeferm.opencv.DefualtImpl.PeopleDetectImplementation;
-import com.codeferm.opencv.DefualtImpl.ProcessImageResponse;
+import com.codeferm.opencv.DefualtImpl.PeopleDetectionResponse;
 
 public class PeopleDetect_Test {
 
@@ -148,7 +148,7 @@ public class PeopleDetect_Test {
 		img.setURL("./resources/human3.jpg");
 		img.setID("test2");
 		
-		ProcessImageResponse p = new PeopleDetection().ProcessImage(new ProcessImageRequest(img));
+		PeopleDetectionResponse p = new PeopleDetection().ProcessImage(new PeopleDetectionRequest(img));
 		assertNotNull(p);
 		
 		Boolean generatedImage = false;

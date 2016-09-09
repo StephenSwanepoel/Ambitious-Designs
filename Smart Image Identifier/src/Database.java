@@ -5,7 +5,7 @@ import java.util.Base64;
 import javax.imageio.ImageIO;
 
 import com.codeferm.opencv.PeopleDetection;
-import com.codeferm.opencv.ProcessImageRequest;
+import com.codeferm.opencv.PeopleDetectionRequest;
 import com.codeferm.opencv.DefualtImpl.Image;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -95,7 +95,7 @@ public class Database {
             image.setURL("./resources/database/"+ ID +".jpg");
             image.setID(ID);
             
-            new PeopleDetection().ProcessImage(new ProcessImageRequest(image));          
+            new PeopleDetection().ProcessImage(new PeopleDetectionRequest(image));          
             
         }
     }	

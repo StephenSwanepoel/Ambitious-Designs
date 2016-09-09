@@ -3,18 +3,18 @@ package com.codeferm.opencv;
 import java.io.IOException;
 
 import com.codeferm.opencv.PeopleDetection;
-import com.codeferm.opencv.ProcessImageRequest;
+import com.codeferm.opencv.PeopleDetectionRequest;
 import com.codeferm.opencv.DefualtImpl.PeopleDetectImplementation;
-import com.codeferm.opencv.DefualtImpl.ProcessImageResponse;
+import com.codeferm.opencv.DefualtImpl.PeopleDetectionResponse;
 
 public class PeopleDetection {
 
-	public ProcessImageResponse ProcessImage(ProcessImageRequest request) {	
+	public PeopleDetectionResponse ProcessImage(PeopleDetectionRequest request) {	
 		
 		try {
 			if(new PeopleDetectImplementation().runTests(request.getImage().getURL()))
 			{
-				return new ProcessImageResponse();
+				return new PeopleDetectionResponse();
 			}
 			else
 				return null;
