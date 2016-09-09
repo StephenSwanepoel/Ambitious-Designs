@@ -2,16 +2,15 @@ package com.codeferm.opencv.DefualtImpl;
 
 import java.io.IOException;
 
-import com.codeferm.opencv.ImageProcessing;
+import com.codeferm.opencv.PeopleDetection;
 import com.codeferm.opencv.PeopleDetect;
 import com.codeferm.opencv.ProcessImageRequest;
 
-public class ImageProcessingImplementation implements ImageProcessing{
+public class ImageProcessingImplementation {
 
-	@Override
 	public ProcessImageResponse ProcessImage(ProcessImageRequest request) {
 		
-		PeopleDetect detect = new PeopleDetectImplementation();
+		/*PeopleDetect detect = new PeopleDetectImplementation();
 		
 		try {
 			detect.runTests(""); //detect.runTest(request.getImage());
@@ -19,7 +18,7 @@ public class ImageProcessingImplementation implements ImageProcessing{
 			e.printStackTrace();
 		}
 		
-		ProcessImageResponse response = new ProcessImageResponse();
+		*/ProcessImageResponse response = new ProcessImageResponse();
 		return response;
 	}
 

@@ -13,7 +13,7 @@ public class Main {
 
 	public static void main(final String... args) throws IOException {
 	
-		PeopleDetect p = new PeopleDetectImplementation();
+		/*PeopleDetect p = new PeopleDetectImplementation();
 	
 		File folder = new File("./resources");
 		File[] listOfFiles = folder.listFiles();
@@ -25,7 +25,7 @@ public class Main {
 				if(listOfFiles[i].getPath().contains(".jpg"))
 					p.runTests(listOfFiles[i].getPath());
 			}
-		}
+		}*/
 	}
     
 }

@@ -53,7 +53,7 @@ import com.codeferm.opencv.ImagePopup;
         "PMD.AvoidInstantiatingObjectsInLoops", "PMD.AvoidUsingNativeCode", "PMD.AvoidFinalLocalVariable",
         "PMD.CommentSize", "PMD.AvoidPrintStackTrace", "PMD.UseProperClassLoader", "PMD.AvoidPrefixingMethodParameters",
         "PMD.DataflowAnomalyAnalysis" })
-public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDetect {
+public class PeopleDetectImplementation {
     /**
      * Logger
      */
@@ -176,7 +176,7 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
      * @param url a String containing the location of an image
      * @throws IOException
      */
-    public void runTests(String url) throws IOException{
+    public Boolean runTests(String url) throws IOException{
     	
     	pop = new ImagePopupImplementation(); 
     	
@@ -225,16 +225,21 @@ public class PeopleDetectImplementation implements com.codeferm.opencv.PeopleDet
 	    		} catch (InterruptedException e) {
 	    		}
 	    		logger.log(Level.INFO, "Human Detected!");
+	    		pop.ClosePopup();
+	    		logger.log(Level.INFO, String.format("--------------------------------------------------------"));
+	    		return true;
     		}
     		else
     			logger.log(Level.INFO, "No Human Detected!");
     			
     		pop.ClosePopup();
     		logger.log(Level.INFO, String.format("--------------------------------------------------------"));
+    		return false;
     	}
     	catch (Exception e) {
 	        System.out.println("Error: " + e.getMessage());
 	    }
+		return null;
     }
     
     /**
