@@ -81,30 +81,38 @@ Willburg Outdoor is company that is passionate about South Africa. With this pas
 Willburg provides its' clients with a camera system which is interfaced with a dashboard as well as a mobile application. The cameras snap pictures when movement is detected and sends them to the Willburg server. The images are then pushed to the respective users. Willburg intend on providing its' users with real-time push notifications when a human has been detected in an image captured by a camera on their property. Smart Image Identifier will play an influential role in the prevention of both farm attacks as well as poaching.
 
 \subsection {Smart Image Identification System}
-The Smart Image Identifier will consist of 3 modules:
+The Smart Image Identifier will consist of 4 modules:
 	\begin {itemize}
-		\item Manipulating.  
-		\item Identification.
-		\item Sorting.
+		\item Retrieve Image.  
+		\item Image Manipulation.
+		\item Test Image.
+		\item Response.
 	\end {itemize}
 
 The above mentioned module will consist of the following:
-	\subsubsection {Manipulating}
+	\subsubsection {Retrieve Image}
 		This module consists of:
 			\begin {itemize}
-				\item Processing an image inorder to prepare it for human identification.
+				\item Retreiving an image from the Willburg server.
+				\item Assign image for testing. 
 			\end {itemize}
 
-	\subsubsection {Identification}
+	\subsubsection {Image Manipulation}
 		This module consists of:
 			\begin {itemize}
-				\item Identifiying the presence of humans within the image.
+				\item Resizing of images.
 			\end {itemize}
 
-	\subsubsection {Sorting}
+	\subsubsection {Test Image}
 		This module consists of:
 			\begin {itemize}
-				\item Sorting of images into baskets and groupings.
+				\item Human detection.
+			\end {itemize}
+
+	\subsubsection {Response}
+		This module consists of:
+			\begin {itemize}
+				\item Sending a response back to the Willburg server for further processing.
 			\end {itemize}
 
 
@@ -119,122 +127,148 @@ The above mentioned module will consist of the following:
 		\item Assesses, store and sort images into a database based on their content.
 	\end {itemize}
 
+\newpage
+\section {Overview of Smart Image Identifier}
+	\FloatBarrier
+	\subsection {UML Diagram}
+	\begin{figure}[htb]
+		\centering
+		\includegraphics [scale=0.5]{../Diagrams/UML_Diagram.jpg}
+		\caption{UML diagram of Smart Image Identifier}
+	\end{figure}	
+	\FloatBarrier
 
-\section {Process Image}
-The ImageProcessing module provides the functionality of manipulating and processing an image inorder for the system to better detect  humans by providing it with multiple tests which it is required to pass.
+	\newpage
+	\subsection {Service Contract}
+	\begin{figure}[htb]
+		\centering
+		\includegraphics [scale=0.5]{../Diagrams/PeopleDetection_Service_Contract.jpg}
+		\caption{Service contract of Smart Image Identifier}
+	\end{figure}	
+	\FloatBarrier
+
+\newpage
+	\subsection {Domain model}
+	\begin{figure}[htb]
+		\centering
+		\includegraphics [scale=0.5]{../Diagrams/Model.jpg}
+		\caption{Domain model of Smart Image Identifier}
+	\end{figure}	
+	\FloatBarrier
+	
+
+
+\section {Retrieve Image}
+The Retrieve Image Service module is responsible for pulling images from the Willburg server for the system to process. The module will retrieve these image using an port connection to the server. Once these images are retrieved they are then assigned for testing.
 	\FloatBarrier
 	\subsection {Scope}
-		The scope of the ImageProcessing module include:
-			\begin {itemize}
-				\item Submit image to be processed.
-				\item Process image.
-			\end {itemize}
-
-	\FloatBarrier
-	\subsection {Domain Model}
-		The image processor uses an image inorder to create an instance of the processed image.
+		The scope for the Retrieve Image Service module is shown in Figure4.
 		\begin{figure}[htb]
 			\centering
-			\includegraphics [scale=0.5]{../Diagrams/ProcessImage_Domain_model.jpg}
-			\caption{Domain model for the Process Image model}
+			\includegraphics [scale=0.5]{../Diagrams/RetrieveImageScope.jpg}
+			\caption{Retrieve Image scope}
 		\end{figure}	
-
-		\FloatBarrier
-		\subsubsection {Service contract}
-			\begin{figure}[htb]
-				\centering
-				\includegraphics [scale=0.5]{../Diagrams/ProcessImage_Service_contract.jpg}
-				\caption{ImageProcessing service contract}
-			\end{figure}	
-			To process an image the following must hold:
+		\newpage
+		The scope of the Retrieve Image module include:
 			\begin {itemize}
-				\item The dimensions of the image should be large enough to process, at least 600x600.
+				\item Retrieve image from the Willburg server.
+				\item Assign image for testing.
 			\end {itemize}
 
-			If an error occurs during reading the image an IOException is thrown. In addition, the service will be refused if the request does not comply to the data structure specification.
+	\subsection {Retrieve Image service model conditions}
+		\subsubsection {Pre-conditions}
+			\begin {itemize}
+				\item System must have a valid connection to the server. 
+				\item Images must be of valid MIME type image
+			\end {itemize}
+		\subsubsection {Post-Conditions}
+			\begin {itemize}
+				\item Image is pulled from server and assigned for processing. 
+			\end {itemize}
+If there is an invalid connection to the to the server a NoConnection exception is thrown. If an error occurs during retrieval of the image an IOException is thrown.
+			
 		
-		\FloatBarrier
-		\paragraph {Functional requirements}
+		
+		\subsection {Functional requirements}
+The lower level services required by the retrieve image service to either check the pre-conditions or address the post-conditions is shown 2.
 
+		\newpage
 		\FloatBarrier
-		\paragraph {processDesign}
-		An image is first processed into a buffered image. The buffered image's data is then stored within a Mat object which is then used to manipulate the pixels found in the image. Manipulations include: scaling to a size which is ideal for processing, greyscaling and equalization inorder to better improve the detection of a person. The processed image is then sent as request to identify the presence of a human.
+		\subsection {processDesign}
+		The images are retrieved from the Willburg server in a base64 encoded string. The images are then decoded into a BufferedImage object. A Image object is created to store the id of the image and the BufferedImage object. The Image object is then sent as request to identify the presence of a human using the PeopleDetectionRequest object.
+		\FloatBarrier
 		\begin{figure}[htb]
 			\centering
-			\includegraphics [scale=0.5]{../Diagrams/ImageProcessing.jpg}
+			\includegraphics [scale=0.5]{../Diagrams/RetrieveImage_ActivityDiagram.jpg}
 			\caption{Process image process design}
 		\end{figure}	
+		\FloatBarrier
 
-\FloatBarrier	
-\section {Identification}
-The Identification module provides the functionality of identification of humans with OpenCV
 
-	\FloatBarrier	
-	\subsection {Scope}
-	The scope of the Identification module include:
-		\begin {itemize}
-			\item Submitting a processed image to perform the identification.
-			\item Identify the presence of humans.
-		\end {itemize}
-
-	\FloatBarrier	
-	\subsection {Domain Model}
-		The processed image is sent to the identification module where the OpenCV's built in algorithm is used (HOG - Histogram of Oriented Gradients) and set to the default "people detector".
-		\begin{figure}[htb]
-			\centering
-			\includegraphics [scale=0.5]{../Diagrams/Identification_Domain_Model.jpg}
-			\caption{Identification Domain model}
-		\end{figure}	
-
-		\FloatBarrier	
-		\subsubsection {Service contract}
-			\begin{figure}[htb]
-				\centering
-				\includegraphics [scale=0.5]{../Diagrams/Identification_Service_Contract.jpg}
-				\caption{Identification process design}
-			\end{figure}	
-
-			\FloatBarrier				
-			\paragraph {Functional requirements}
-			
-			\FloatBarrier	
-			\paragraph {processDesign}
-				\begin{figure}[htb]
-					\centering
-					\includegraphics [scale=0.5]{../Diagrams/Identification_Process_Design.jpg}
-					\caption{Identification process design}
-				\end{figure}	
-
-\section {ImageSorting}
-		\FloatBarrier	
-		\subsection {Scope}
-		The scope of the ImageSorting module include:
-			\begin {itemize}
-				\item Submit image to be processed.
-				\item Process image.
-			\end {itemize}
 	
-	\FloatBarrier		
-	\subsection {Domain Model}
-		\FloatBarrier	
-		\subsubsection {Service contract}		
-		\begin{figure}[htb]
-			\centering
-			\includegraphics [scale=0.5]{../Diagrams/Sorting_Service_Contract.jpg}
-			\caption{Identification process design}
-		\end{figure}
-		
-			\FloatBarrier	
-			\paragraph {Functional requirements}
-
-			\FloatBarrier	
-			\paragraph {processDesign}
+	\section {Image Manipulation}
+	\hfill \break
+The Image Manipulation Service module is responsible for manipulating images inorder to better identify human. The module will manipulate each image by resizing the image, grayscaling and equalization. Once these images are manipulated they are then assigned for testing.
+		\subsection {Scope}
+			The scope for Image Manipulation Service module is shown is Figure 6.
 			\begin{figure}[htb]
 				\centering
-				\includegraphics [scale=0.5]{../Diagrams/Sorting_process_design.jpg}
-				\caption{Identification process design}
+				\includegraphics [scale=0.5]{../Diagrams/ImageManipulation_Scope.jpg}
+				\caption{Image Manipulation scope}
 			\end{figure}	
+			\FloatBarrier
 
+		\subsection {processDesign}
+		The BufferedImage data is retrieved from the Image object, that was sent through in the request. The BufferedImage is then used to create three Mat obejcts. The first mat object is the original image itself. This mat object isthen resized and used to create the last two mat object. The second mat object is a grayscaled mat object and the third is the grayscaled mat object that was equalised. After these three mat objects are created they are sent on to the Test Image Service model for testing.
+			\FloatBarrier
+			\begin{figure}[htb]
+				\centering
+				\includegraphics [scale=0.5]{../Diagrams/ImageManipulation_ActivityDiagram.jpg}
+				\caption{Image Manipulation process design}
+			\end{figure}	
+			\FloatBarrier
 
+	\newpage
+	\section {Test Image}
+		The Image Manipulation Service module is responsible for human detection. The module will use the manipulated image and the prerform human detection. The module will use the manipulated mat objects to perform three individual tests. These tests include performing human detection on the original image, grayscaled image and the equalised image.
+		\subsection {Scope}
+			The scope for Test Image Service module is shown is Figure 8.
+			\begin{figure}[htb]
+				\centering
+				\includegraphics [scale=0.5]{../Diagrams/TestImage_Scope.jpg}
+				\caption{Test Image scope}
+			\end{figure}	
+			\FloatBarrier
+		
+		\subsection {processDesign}
+			The three manipulated mat objects are used to in a three phase test system inorder to improve the accuracy of human detection. Humand detection will be performed on each manipulated image. If two out of the three test are positive then the system has detected a human and a reponse will be sent to the server.
+			\FloatBarrier
+			\begin{figure}[htb]
+				\centering
+				\includegraphics [scale=0.5]{../Diagrams/TestImage_ActivityDiagram.jpg}
+				\caption{Test Image process design}
+			\end{figure}	
+			\FloatBarrier
 
+	\section {Response}
+		The Response Service module is creating a response object to send to the Willburg server.
+		\subsection {Scope}
+		The scope for Response Service module is shown is Figure 10.
+			\begin{figure}[htb]
+				\centering
+				\includegraphics [scale=0.5]{../Diagrams/Response_Scope.jpg}
+				\caption{Response scope}
+			\end{figure}	
+			\FloatBarrier
+		
+		
+		\subsection {processDesign}
+			A response object is created and sent back to the server.
+			\FloatBarrier
+			\begin{figure}[htb]
+				\centering
+				\includegraphics [scale=0.5]{../Diagrams/Response_ActivityDiagram.jpg}
+				\caption{Response process design}
+			\end{figure}	
+			\FloatBarrier
 \end{document}
