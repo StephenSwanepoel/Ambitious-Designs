@@ -24,7 +24,7 @@
 
 % define the title
 \author{Ambitious Design}
-\title{ Software Requirements Specifications and Technology Neutral Process Design}
+\title{Testing Documentation}
 \begin{document}
 \setlength{\parskip}{6pt}
 
@@ -74,9 +74,6 @@ u12081095
 
 \renewcommand{\thesection}{\arabic{section}}
 \newpage
-\begin{center}
-\textsc{\LARGE Software Requirements Specification}\\[1.5cm]
-\end{center}
 
 \section {Introduction}
 	\subsection {Purpose}
@@ -88,7 +85,33 @@ u12081095
 \section {Requirements for Test}
 	The listing below identifies those items (use cases, functional requirements, non-functional requirements) that have been identified as targets for testing. 
 	This list represents what will be tested.
-	
+
+\section {Requirements for Test}
+	\begin {itemize}
+		\item Programming Languages: Java
+		\item Testing Frameworks: JUnit
+		\item Coding Environment: Eclipse
+		\item Operating System: Any
+	\end {itemize}
+
+\section {Assumptions and Dependencies}	
+	\begin {enumerate}
+		\item Assumptions:
+			\begin {itemize}
+				\item A server that handles images exists.
+				\item All dependensies work and are up to date.
+				\item The client has infrastructure to run the system on.
+			\end {itemize}
+
+		\item Dependencies:
+		\begin {itemize}
+			\item JUnit
+			\item mongo-java-driver
+			\item OpenCV
+		\end {itemize}
+	\end {enumerate}
+
+
 	\subsection {Function Testing}
 	\subsection {Performance Testing}
 		\begin {itemize}
@@ -104,7 +127,7 @@ u12081095
 		\begin {itemize}
 			\item Verify system response under high levels requests
 		\end {itemize}
-	\subsection {Security}
+%	\subsection {Security}
 	
 \section {Test Strategy}
 	The Test Strategy presents the recommended approach to the testing of the software applications. The previous section on Test Requirements described what will be tested; this describes how it will be tested.
