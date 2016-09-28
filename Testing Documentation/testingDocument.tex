@@ -14,6 +14,9 @@
 \usepackage{hyperref}
 \usepackage{verbatim}
 \usepackage{placeins}
+\usepackage{url}
+
+\PassOptionsToPackage{hyphens}{url}
 
 \hypersetup{
     colorlinks=true,
@@ -75,7 +78,6 @@ u12081095
 \footnotesize
 \normalsize
 
-\newpage
 \tableofcontents
 
 \renewcommand{\thesection}{\arabic{section}}
@@ -87,7 +89,7 @@ u12081095
 	\subsection {Scope}
 		Smart Image Identifier aims to provide the client with a system that is able to identify humans from provided images. The system only has software components.
 		Every use case that is provided by the system will be tested.
-	\subsection {Test Environment}
+	\subsection {Testing Environment}
 		\subsubsection{Programming Languages}
 			\begin {itemize}
 				\item Java
@@ -102,7 +104,7 @@ u12081095
 			\end {itemize}
 		\subsubsection{Operating System}
 			\begin {itemize}
-				\item All major operating systems are supported. Includeding Windows and Linux
+				\item Works on any operating system such as Windows and Linux
 			\end {itemize}
 	
 	\newpage
@@ -143,22 +145,23 @@ u12081095
 		\item Test Output/Result Image
 		\item Class Instantiation and Performance		
 	\end{itemize}
-	\FloatBarrier
-	\begin{table}
-		\centering
-		\begin{tabular}{c c c c}
-			\hline\hline
-			Feature ID & RDS Source & Summary & Test Case ID \\[1ex]
-			%heading
-			\hline
-			1 &  & Resizing & 1 \\
-			2 &  & Grey-Scale & 2\\
-			3 &  & Equalization & 3\\
-			4 &  & Generate Mat & 4\\
-			5 &  & Output/Result Image & 5\\
-			6 &  & Instantiation and Performance & 6\\
-		\end{tabular}
-	\end{table}
+
+	\begin{center}
+	\begin{tabular}{ || c | c | c | c ||}
+		\hline
+		Feature ID & RDS Source & Summary & Test Case ID \\[1ex]
+		%heading
+		\hline\hline
+		1 &  & Resizing & 1 \\
+		2 &  & Grey-Scale & 2\\
+		3 &  & Equalization & 3\\
+		4 &  & Generate Mat & 4\\
+		5 &  & Output/Result Image & 5\\
+		6 &  & Instantiation and Performance & 6\\
+		\hline
+	\end{tabular}
+	\end{center}
+
 \newpage
 \section{Test Cases}
 	\subsection{Test Case 1: Resize Image}
@@ -244,7 +247,7 @@ u12081095
 	%\subsection {Test Report}
 		
 	\subsection {Test code}
-		\href{url}{https://github.com/StephenSwanepoel/Ambitious-Designs/tree/master/Testing\%2520Documentation}  
+		\href{https://github.com/StephenSwanepoel/Ambitious-Designs/blob/master/Smart\%20Image\%20Identifier/src/test/com/codeferm/opencv/PeopleDetect\_Test.java}{Link to test code}  
 	
 \newpage
 \begin{center}
@@ -258,7 +261,11 @@ u12081095
 	\end {itemize}
 
 	\subsection{Functional Requirements Tests Results}
+		The tests we have created for this module are contained within the file \href{https://github.com/StephenSwanepoel/Ambitious-Designs/blob/master/Smart\%20Image\%20Identifier/src/test/com/codeferm/opencv/PeopleDetect\_Test.java}{PeopleDetect\_Test.java} and \href{https://github.com/StephenSwanepoel/Ambitious-Designs}{Link to Github project}.
+
+
 		The following results were obtained from the tests conducted. The tests to produce the follow results have passed/failed and the reasons are stated below
+		
 		\subsubsection{Resize Image (TC 4.1.1)}	
 			\begin {itemize}
 				\item The image's dimensions were correct according to the size requested in the method.
@@ -307,7 +314,7 @@ u12081095
 				\item Pixel quality per image is dependent on the model of trail camera purchased by the project owner (Willburg)'s client.
 			\end{itemize}
 		\end {itemize}
-		
+\newpage		
 	\section{Conclusions and Recommendations}
 		\begin {itemize}
 			\item We will approach these problems by further inspection of the source code to where possible tweaks may be made and perhaps the addition of new test cases.
