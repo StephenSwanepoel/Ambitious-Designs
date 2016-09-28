@@ -1,0 +1,318 @@
+\documentclass[a4paper,12pt]{report}
+\addtolength{\oddsidemargin}{-1.cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{3.5cm}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+\makeindex
+
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{placeins}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+
+% define the title
+\author{Ambitious Design}
+\title{ Software Requirements Specifications and Technology Neutral Process Design}
+\begin{document}
+\setlength{\parskip}{6pt}
+% generates the title
+\begin{titlepage}
+
+\begin{center}
+\includegraphics{../Images/willburg.png}\\
+\textsc{\LARGE Willburg Outdoor PTY(ltd.)}\\[1.5cm]
+
+\includegraphics[height=8cm]{../Images/ad.jpg}\\
+\textsc{\Large Smart Image Identifier }\\[1.0cm]
+\textsc{\Large Version 1.0 }\\[0.5cm]
+
+% Title
+\HRule \\[0.4cm]
+{ \huge \bfseries Unit Test Plan \& Report}\\[0.4cm]
+\HRule \\[0.4cm]
+% Author and supervisor
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Stephen {Swanepoel}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{} \\
+u11032091
+\end{flushright}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+Dian {Veldsman}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{} \\
+u12081095
+\end{flushright}
+\end{minipage}
+
+
+{\large \today}
+\end{center}
+\end{titlepage}
+\footnotesize
+\normalsize
+
+\newpage
+\tableofcontents
+
+\renewcommand{\thesection}{\arabic{section}}
+\newpage
+
+\section {Introduction}
+	\subsection {Purpose}
+		The purpose of the document is to give an overview of the test performed on the Smart Image Identifier project and the overall test coverage provided by these tests.
+	\subsection {Scope}
+		Smart Image Identifier aims to provide the client with a system that is able to identify humans from provided images. The system only has software components.
+		Every use case that is provided by the system will be tested.
+	\subsection {Test Environment}
+		\subsubsection{Programming Languages}
+			\begin {itemize}
+				\item Java
+			\end {itemize}
+		\subsubsection{Testing Frameworks}
+			\begin {itemize}
+				\item J-Unit
+			\end {itemize}
+		\subsubsection{Coding Environment}
+			\begin {itemize}
+				\item Eclipse
+			\end {itemize}
+		\subsubsection{Operating System}
+			\begin {itemize}
+				\item All major operating systems are supported. Includeding Windows and Linux
+			\end {itemize}
+	
+	\newpage
+	\subsection{Assumptions and Dependencies}
+		\begin {enumerate}
+			\item Assumptions:
+			\begin {itemize}
+				\item A server that handles images exists.
+				\item All dependencies work and are up to date.
+				\item The client has infrastructure to run the system on.
+			\end {itemize}
+				
+			\item Dependencies:
+			\begin {itemize}
+				\item JUnit
+				\item mongo-java-driver
+				\item OpenCV
+			\end {itemize}
+		\end {enumerate}
+\newpage
+\begin{center}
+	\textsc{\LARGE Unit Test Plan}\\[1.5cm]
+\end{center}
+
+\section {Test Items}		
+	\begin{itemize}
+		\item Mat object
+		\item BufferedImage object 
+	\end{itemize}
+
+\section {Functional Features to be Tested}
+	Features:
+	\begin{itemize}
+		\item Resizing of image
+		\item Grey-Scale of Image
+		\item Equalization of Image
+		\item Generate Mat Object
+		\item Test Output/Result Image
+		\item Class Instantiation and Performance		
+	\end{itemize}
+	\FloatBarrier
+	\begin{table}
+		\centering
+		\begin{tabular}{c c c c}
+			\hline\hline
+			Feature ID & RDS Source & Summary & Test Case ID \\[1ex]
+			%heading
+			\hline
+			1 &  & Resizing & 1 \\
+			2 &  & Grey-Scale & 2\\
+			3 &  & Equalization & 3\\
+			4 &  & Generate Mat & 4\\
+			5 &  & Output/Result Image & 5\\
+			6 &  & Instantiation and Performance & 6\\
+		\end{tabular}
+	\end{table}
+\newpage
+\section{Test Cases}
+	\subsection{Test Case 1: Resize Image}
+	\paragraph{Objective: The purpose of this test is to resize an image before processing.}
+	\paragraph{Input: The following inputs will be used to test this functionality:}
+		\begin{itemize}
+			\item An image contained in a .jpg format
+		\end{itemize}
+	\paragraph{Outcome: The following is the expected outcomes for a pass result for the functionality:}
+		\begin{itemize}
+			\item The image has successfully be resized to the requested dimensions.
+		\end{itemize}
+		
+	\subsection{Test Case 2: Grey-Scale of Image}
+	\paragraph{Objective: The purpose of this test is to strip all colour from the image before processing.}
+	\paragraph{Input: The following inputs will be used to test this functionality:}
+	\begin{itemize}
+		\item An image contained in a .jpg format
+	\end{itemize}
+	\paragraph{Outcome: The following is the expected outcomes for a pass result for the functionality:}
+	\begin{itemize}
+		\item The image has successfully be stripped of all its' colour except black and white.
+	\end{itemize}	
+		
+	\subsection{Test Case 3: Equalization of Image}
+	\paragraph{Objective: The purpose of this test is to enhance the contrast within the image.}
+	\paragraph{Input: The following inputs will be used to test this functionality:}
+	\begin{itemize}
+		\item A .jpg image in presented in a grey-scaled format.
+	\end{itemize}
+	\paragraph{Outcome: The following is the expected outcomes for a pass result for the functionality:}
+	\begin{itemize}
+		\item The image's contrast has been successfully enhanced.
+	\end{itemize}
+		
+	\subsection{Test Case 4: Generate Mat Object}
+	\paragraph{Objective: The purpose of this test is to use a given image and create a Mat object of it which allows us to process the image pixel by pixel.}
+	\paragraph{Input: The following inputs will be used to test this functionality:}
+	\begin{itemize}
+		\item An image contained in a .jpg format
+	\end{itemize}
+	\paragraph{Outcome: The following is the expected outcomes for a pass result for the functionality:}
+	\begin{itemize}
+		\item The image has successfully been converted into a non-null Mat object.
+	\end{itemize}	
+	
+	\subsection{Test Case 5: Test Output/Result Image}
+	\paragraph{Objective: The purpose of this test is to ensure the existence of the the generated image containing the result after being processed by the human detection algorithm.}
+	\paragraph{Input: The following inputs will be used to test this functionality:}
+	\begin{itemize}
+		\item An image contained in a .jpg format
+		\item A local, pre-defined directory
+	\end{itemize}
+	\paragraph{Outcome: The following is the expected outcomes for a pass result for the functionality:}
+	\begin{itemize}
+		\item The image was successfully stored generated from the processed Mat object in the appropriate directory.
+	\end{itemize}
+	
+	\subsection{Test Case 6: Class Instantiation and Performance}
+	\paragraph{Objective: The purpose of this test is to ensure the required classes have been successfully instantiated and perform correctly.}
+	\paragraph{Input: The following inputs will be used to test this functionality:}
+	\begin{itemize}
+		\item An image contained in a .jpg format
+		\item A local, pre-defined directory
+	\end{itemize}
+	\paragraph{Outcome: The following is the expected outcomes for a pass result for the functionality:}
+	\begin{itemize}
+		\item The image has successfully be stripped of all its' colour except black and white.
+	\end{itemize}
+		
+\section{Item Pass / Fail Criteria}
+	A request is considered successful when it passes any of the following 2 tests.
+	\begin {itemize}
+		\item Normal human detection test
+		\item Grey-scaled human detection test
+		\item Equalised human detection test
+	\end {itemize}
+	If more than 2 of the above criteria are not met, the item will be considered failed
+	
+\section{Test Deliverables}
+	\subsection {Test Plan}
+		Each test is run individually and tested multiple times against various images to ensure the results are constant and return the desired results. If a test is failed a better inspection would take place as to why the test had failed and steps on rectifying any problem would follow.
+	%\subsection {Test Report}
+		
+	\subsection {Test code}
+		\href{url}{https://github.com/StephenSwanepoel/Ambitious-Designs/tree/master/Testing\%2520Documentation}  
+	
+\newpage
+\begin{center}
+	\textsc{\LARGE Unit Test Report}\\[1.5cm]
+\end{center}
+	\section{Detailed Test Results}
+	\subsection{Overview of Test Results}
+	\begin {itemize}
+	\item All unit tests were successful.
+	\item J-Unit was used to create our unit tests for Smart Image Identifier as it is a strong unit testing framework for the Java programming language.
+	\end {itemize}
+
+	\subsection{Functional Requirements Tests Results}
+		The following results were obtained from the tests conducted. The tests to produce the follow results have passed/failed and the reasons are stated below
+		\subsubsection{Resize Image (TC 4.1.1)}	
+			\begin {itemize}
+				\item The image's dimensions were correct according to the size requested in the method.
+			\end {itemize}
+		\paragraph{Result: Pass}
+		
+		\subsubsection{Grey-Scale Image (TC 4.1.2)}
+		\begin {itemize}
+			\item The image was successfully stripped of all colours except black and white.
+		\end {itemize}
+		\paragraph{Result: Pass}
+		
+		\subsubsection{Equalisation of Image (TC 4.1.3)}
+		\begin {itemize}
+			\item The contrast within the image was successfully increased.
+		\end {itemize}	
+		\paragraph{Result: Pass}
+		
+		\subsubsection{Generate Mat Object (TC 4.1.4)}
+		\begin {itemize}
+			\item A Mat object was successfully created which contains the pixels of a given image.
+		\end {itemize}
+		\paragraph{Result: Pass}
+		
+		\subsubsection{Test Output/Result Image (TC 4.1.5)}
+		\begin {itemize}
+		\item Images are stored correctly in the respective folders based on the type of image it is (normal, grey-scaled, equalised) after it has been processed.
+		\end {itemize}
+		\paragraph{Result: Pass}
+		
+		\subsubsection{Class Instantiation and Performance (TC 4.1.6)}
+		\begin {itemize}
+		\item All classes were correctly instantiated and the result is a running version of Smart Image Identifier.
+		\end {itemize}
+		\paragraph{Result: Pass}
+		
+	\section{Other}
+		\begin {itemize}
+			\item Smart Image Identifier has a success rate of 68\%.
+			\item The contract in place stipulates how the system operates and procedures used. 
+			\item Mock objects portray results of each image that has been successfully processed.
+			\item Reasons why the tests failed include:
+			\begin{itemize}
+				\item Non-consistent quality of images being processed. The environment from with each image originates is unique.
+				\item Day time images have a higher success rate than night time pictures.
+				\item Pixel quality per image is dependent on the model of trail camera purchased by the project owner (Willburg)'s client.
+			\end{itemize}
+		\end {itemize}
+		
+	\section{Conclusions and Recommendations}
+		\begin {itemize}
+			\item We will approach these problems by further inspection of the source code to where possible tweaks may be made and perhaps the addition of new test cases.
+			\item Limitations of the test cases include: image formats are restricted to be in .jpg format for processing.
+			\item The largest contributing factor to failed or inaccurate tests is the initial quality of the image before it has been altered. Images who's dimensions are smaller than that of the the image produced after resizing get pixelated and thus this stretches the pixels which will highly reduce the accuracy of the human detection.			
+			\item The restrictions are limited to the hardware components used by clients of Willburg (trail cameras) as they range in picture quality between the various models of trail cameras they provide. One way of addressing the problem would providing additional tests for images to pass.
+		\end {itemize}
+\end{document}	
