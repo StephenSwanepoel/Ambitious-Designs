@@ -87,8 +87,13 @@ u12081095
 	\subsection {Purpose}
 		The purpose of the document is to give an overview of the test performed on the Smart Image Identifier project and the overall test coverage provided by these tests.
 	\subsection {Scope}
-		Smart Image Identifier aims to provide the client with a system that is able to identify humans from provided images. The system only has software components.
-		Every use case that is provided by the system will be tested.
+		The scope of this document is structured as follows. The features that are considered for
+		testing are listed in \hyperref[sec:Features]{section 3}. Tests that have been identified from the requirements are
+		discussed in detail in section  \hyperref[sec:Cases]{section 4}. Furthermore, this document outlines the test environment
+		and the risks involved in the testing approaches that will be followed. Assumptions and
+		dependencies of this test plan will also be mentioned.  \hyperref[sec:Results]{Section 7.1, 7.2 and 9} outlines,
+		discusses and concludes on the results of the tests, respectively.
+
 	\subsection {Testing Environment}
 		\subsubsection{Programming Languages}
 			\begin {itemize}
@@ -136,6 +141,7 @@ u12081095
 	\end{itemize}
 
 \section {Functional Features to be Tested}
+\label{sec:Features}
 	Features:
 	\begin{itemize}
 		\item Resizing of image
@@ -164,6 +170,7 @@ u12081095
 
 \newpage
 \section{Test Cases}
+\label{sec:Cases}
 	\subsection{Test Case 1: Resize Image}
 	\paragraph{Objective: The purpose of this test is to resize an image before processing.}
 	\paragraph{Input: The following inputs will be used to test this functionality:}
@@ -254,6 +261,7 @@ u12081095
 	\textsc{\LARGE Unit Test Report}\\[1.5cm]
 \end{center}
 	\section{Detailed Test Results}
+	\label{sec:Results}
 	\subsection{Overview of Test Results}
 	\begin {itemize}
 	\item All unit tests were successful.
