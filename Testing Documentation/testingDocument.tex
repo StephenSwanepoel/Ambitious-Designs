@@ -85,7 +85,12 @@ u12081095
 
 \section {Introduction}
 	\subsection {Purpose}
-		The purpose of the document is to give an overview of the test performed on the Smart Image Identifier project and the overall test coverage provided by these tests.
+		The purpose of the document is to give an overview of the test performed on the Smart Image Identifier project and the overall test coverage provided by these tests.\linebreak
+		\begin{itemize}
+			\item Tests reduce bugs in new features.
+			\item Tests reduce bugs in existing features.
+			\item Tests Improve Design.
+		\end{itemize}
 	\subsection {Scope}
 		The scope of this document is structured as follows. The features that are considered for
 		testing are listed in \hyperref[sec:Features]{section 3}. Tests that have been identified from the requirements are
@@ -93,7 +98,7 @@ u12081095
 		and the risks involved in the testing approaches that will be followed. Assumptions and
 		dependencies of this test plan will also be mentioned.  \hyperref[sec:Results]{Section 7.1, 7.2 and 9} outlines,
 		discusses and concludes on the results of the tests, respectively.
-
+		
 	\subsection {Testing Environment}
 		\subsubsection{Programming Languages}
 			\begin {itemize}
@@ -153,17 +158,17 @@ u12081095
 	\end{itemize}
 
 	\begin{center}
-	\begin{tabular}{ || c | c | c | c ||}
+	\begin{tabular}{ || c | c | c ||}
 		\hline
-		Feature ID & RDS Source & Summary & Test Case ID \\[1ex]
+		Feature ID & Summary & Test Case ID \\[1ex]
 		%heading
 		\hline\hline
-		1 &  & Resizing & 1 \\
-		2 &  & Grey-Scale & 2\\
-		3 &  & Equalization & 3\\
-		4 &  & Generate Mat & 4\\
-		5 &  & Output/Result Image & 5\\
-		6 &  & Instantiation and Performance & 6\\
+		1 &  Resizing & 1 \\
+		2 &  Grey-Scale & 2\\
+		3 &  Equalization & 3\\
+		4 &  Generate Mat & 4\\
+		5 &  Output/Result Image & 5\\
+		6 &  Instantiation and Performance & 6\\
 		\hline
 	\end{tabular}
 	\end{center}
@@ -239,14 +244,37 @@ u12081095
 		\item The image has successfully be stripped of all its' colour except black and white.
 	\end{itemize}
 		
-\section{Item Pass / Fail Criteria}
-	A request is considered successful when it passes any of the following 2 tests.
-	\begin {itemize}
-		\item Normal human detection test
-		\item Grey-scaled human detection test
-		\item Equalised human detection test
-	\end {itemize}
-	If more than 2 of the above criteria are not met, the item will be considered failed
+\section{Item Pass / Fail Criteria}	
+	\subsection{Test Case 1: Resize Image}
+		\begin {itemize}
+			\item Pass: Image conforms to dimensions specified.
+			\item Fail: Image does not conform to dimensions specified.
+		\end {itemize}
+	\subsection{Test Case 2: Grey-Scale of Image}
+		\begin {itemize}
+			\item Pass: Image is stripped of all colour.
+			\item Fail: Image contains colour.
+		\end {itemize}
+	\subsection{Test Case 3: Equalization of Image}
+		\begin {itemize}
+			\item Pass: Image has an increased contrast.
+			\item Fail: Image's contrast is standard.
+		\end {itemize}
+	\subsection{Test Case 4: Generate Mat Object}
+		\begin {itemize}
+			\item Pass: Mat object is successfully created, and holds the image's pixels.
+			\item Fail: Mat object fails to create.
+		\end {itemize}
+	\subsection{Test Case 5: Test Output/Result Image}
+		\begin {itemize}
+			\item Pass: Image exists in location tested.
+			\item Fail: Image does not exist in location tested.
+		\end {itemize}
+	\subsection{Test Case 6: Class Instantiation}
+		\begin {itemize}
+			\item Pass: The object has successfully been instantiated.
+			\item Fail: The object instantiation fails.
+		\end {itemize}
 	
 \section{Test Deliverables}
 	\subsection {Test Plan}
