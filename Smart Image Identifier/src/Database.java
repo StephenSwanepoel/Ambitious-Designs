@@ -30,14 +30,10 @@ public class Database {
 		
 		System.out.println("Connected to database successfully.");
 		readDatabase();
-		
-		//return true;
-		
+				
 		} catch (Exception e) {
             System.err.println(e.getClass().getName()+": "+e.getMessage());
         }
-		
-		//return false;
 	}
 	
 	 /**
@@ -75,7 +71,9 @@ public class Database {
         DBCursor items2 = db.getCollection("Willburg").find(query,attachments);
         
         Image image = new Image();
-              
+        new File("./resources/database").mkdirs();     
+                
+        //new PeopleDetection().ProcessImage(new PeopleDetectionRequest(image));
         for(int i=0; i<50; i++)
         {
         	BasicDBObject obj = (BasicDBObject) items.next();

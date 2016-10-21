@@ -13,10 +13,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
 //Libraries required for logging system events
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 //Library required for read/write operations for images
 import javax.imageio.ImageIO;
@@ -141,6 +143,10 @@ public class PeopleDetectImplementation {
     	output.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), data);
     	//Write the contents of the mat object to the output variable
     	String outputFile = ".\\output\\database\\";
+        new File("./output/database").mkdirs();
+        new File("./output/database/normal").mkdirs();
+        new File("./output/database/greyScale").mkdirs();
+        new File("./output/database/EQ").mkdirs();
     	String img;
     	
     	//Database images
@@ -193,20 +199,21 @@ public class PeopleDetectImplementation {
 	    	Mat mat2 = greyScale(image,mat);	
 	    	Mat mat3 = equalization(image,mat2);
 	    	
-	    	logger.log(Level.INFO, "Initialising Tests");
+logger.log(Level.INFO, "Initialising Tests");
+	    	
 	    	//Test 1 - Resize image + normal 
-	    	logger.log(Level.INFO, "Processing standard image");
+	    	//logger.log(Level.INFO, "Standard image: " + successfulTests[0]);
     		successfulTests[0] = processImage(mat, image, data, url, 'N');
     		
     		//Test 2 - Resize image + greyscale 
-    		logger.log(Level.INFO, "Processing greyscaled image");    		
+    		//logger.log(Level.INFO, "Greyscaled image: " + successfulTests[1]);   
     		successfulTests[1] = processImage(mat2, image, data, url, 'G');
     		    		   		
     		//Test 3 - Resize image + equalisation   		
-    		logger.log(Level.INFO, "Processing equalise image");    		
-    		successfulTests[2] = processImage(mat3, image, data, url, 'E');
-    		    		
-    		logger.log(Level.INFO, "Tests complete");
+    		//logger.log(Level.INFO, "Equalised image: " + successfulTests[2]);  
+    		successfulTests[2] = processImage(mat3, image, data, url, 'E'); 
+    		    	
+    		//logger.log(Level.INFO, "Tests completed...");
     		
     		int count = 0;
     		for (int i=0; i<3; i++){
@@ -218,13 +225,14 @@ public class PeopleDetectImplementation {
 	        final double seconds = (double) estimatedTime / 1000;
     		logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
     		
+    		
     		if (count >= 2)
     		{
 	    		try {
 	    			TimeUnit.SECONDS.sleep(5);
 	    		} catch (InterruptedException e) {
 	    		}
-	    		logger.log(Level.INFO, "Human Detected!");
+    			logger.log(Level.INFO, "Human Detected!");
 	    		pop.ClosePopup();
 	    		logger.log(Level.INFO, String.format("--------------------------------------------------------"));
 	    		return true;
@@ -345,12 +353,13 @@ public class PeopleDetectImplementation {
     /**
      * Suppress default constructor for noninstantiability.
      */
-    public PeopleDetectImplementation() {
-   
+    public PeopleDetectImplementation(FileHandler fh) {    	
+        logger.addHandler(fh);
+		SimpleFormatter formatter = new SimpleFormatter();  
+		fh.setFormatter(formatter);
     }
 
 	public void processImage(String url) throws IOException {
-		// TODO Auto-generated method stub
 		
 	}
     
