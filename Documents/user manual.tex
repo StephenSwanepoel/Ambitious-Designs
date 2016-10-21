@@ -52,10 +52,10 @@
 \begin{center}
 % Upper part of the page           
 
-\includegraphics{../Images/willburg.png}\\
+\includegraphics{willburg.png}\\
 \textsc{\LARGE Willburg Outdoor PTY(ltd.)}\\[1.5cm]
 
-\includegraphics[height=8cm]{../Images/ad.jpg}\\
+\includegraphics[height=8cm]{ad.jpg}\\
 \textsc{\Large Smart Image Identifier }\\[1.0cm]
 \textsc{\Large Version 1.0 }\\[0.5cm]
 % Title
@@ -106,51 +106,91 @@ u12081095
 Smart Image Identifier is human recognition software written for Willburg to provide real-time processing of images on their server to assist in the improvement of security. The system is completely autonomous and thus has no user interaction, it is just system-to-system communications. 
 \newline\newline
 When an image is pushed to the server, Smart Image Identifier retrieves the image, processes it and sends an appropriate response back to the server
+\newline\newline
+The system will be used to provide real-time security alerts when a human is detected on the property, sending the user the image with the identified human. The user may then take the steps required (eg. calling respective authorities - police or security companies) if they deem the human a threat.
 
 \subsection{System Configuration}
 \includegraphics[width=8cm]{System.png}\\
  The system and its network is small and consists of a dummy database produced by the project owner and a server on which Smart Image Identifier will run. \linebreak
  All processes will run on the server, it will also be responsible for the retrieval of images from the database and delivering a response based on the result.
+ \linebreak \linebreak
+ The server and database is pre-existing infrastructure created by Willburg, and the human detection software (Smart Image Identifier) was created by Ambitious Designs. The software will execute on the server - which is to be implemented by Willburg once resources become available as they wish to implement the communications between their infrastructure and the software in their own time.
+ 
 \subsection{Installation}
+	\subsubsection{OpenCV}
+	OpenCV is the framework used within Smart Image Identifier, it is available for download from 
+	Download the
+	\href{http://opencv.org/downloads.html}{OpenCV}
 	\subsubsection{Install Eclipse}
-	The easiest way to build the dispatcher from source is using Eclipse Neon. Eclipse Neon is a
-	development environment and is open-source software. The latest version of this software can
-	be obtained at https://www.eclipse.org/downloads/. After the download is completed, install
+	The easiest way to build the dispatcher from source is using Eclipse Neon. \href{https://www.eclipse.org/downloads/}{Eclipse Neon}
+	 is a
+	development environment and is open-source software. After the download is completed, install
 	the software using the instructions provided by the installer.
 	
 	\subsubsection{Importing the project}
-	In Eclipse, click File, Import, General, finally, select, Existing Projects into Workspace and click
-	Next. \newline\newline
-	Select root directory, click Browse, locate the given project folder, finally, select Finish.
+	In Eclipse, click File, New, Java Project, give project a title, click Next. \newline\newline
+	
+	\begin{itemize}
+		\item Step:1	\linebreak
+		\includegraphics[height=8cm]{007.png}\\
+		\linebreak
+		Select the Libraries tab, Click Add Library.
+		\pagebreak
+		\item Step:2	\linebreak
+		\includegraphics[height=8cm]{008.png}\\ 
+		\linebreak 
+		Select User Library, Click Next.
+		\item Step:3	\linebreak
+		\includegraphics[height=8cm]{009.png}\\
+		\linebreak
+		Click User Libraries.
+		\pagebreak
+		\item Step:4	\linebreak
+		\includegraphics[height=8cm]{010.png}\\
+		\linebreak
+		Select New, Name your Library, Click OK.
+		\linebreak
+		\item Step:5	\linebreak
+		\includegraphics[height=8cm]{011.png}\\
+		\linebreak
+		Click Add External JAR's, add the two .jar files which may be found in "Smart Image Identifier/lib/", namely: "junit.jar" and "mongo-java-driver-2.10.1".
+		\linebreak\linebreak
+		Finally, browse through to OpenCV on your system and add the .jar file which may be found in the following directory on your system: OpenCV/openCV3.1/opencv/build/java		
+		\pagebreak
+		\item Step:6	\linebreak
+		Copy over all the folders from \href{https://github.com/StephenSwanepoel/Ambitious-Designs/tree/master/Smart\%20Image\%20Identifier}{Smart Image Identifier} to your newly created project - replacing ALL folders.
+		
+		
+	\end{itemize}
+	
 	
 	\subsubsection{Setting system environment variables}
 	Setting of environment variables is necessary for your system to detect the OpenCV framework
 	which was used for developing Smart Image Identifier.
-	
-	\newpage
+		
 	Lets get started
 	
 	\begin{itemize}
 		\item Step:1	\linebreak
-		\includegraphics[height=8cm]{../Images/001.png}\\
+		\includegraphics[height=8cm]{001.png}\\
 		\linebreak
-		Open File Explorer, right click on This PC (Yours may be named otherwise), click Properties
+		Open File Explorer, right click on This PC (Yours may be named otherwise), click Properties.
+		\pagebreak
 		\item Step:2	\linebreak
-		\includegraphics[height=8cm]{../Images/002.png}\\ 
+		\includegraphics[height=8cm]{002.png}\\ 
 		\linebreak 
 		On the left hand panel select Advanced System Settings.
-		\pagebreak
 		\item Step:3	\linebreak
-		\includegraphics[height=8cm]{../Images/003.png}\\
+		\includegraphics[height=8cm]{003.png}\\
 		\linebreak
-		Click Environment Variables located at the bottom of the window.
-		\item Step:4	\linebreak
-		\includegraphics[height=8cm]{../Images/004.png}\\
-		\linebreak
-		Select Path, click Edit
+		Click Environment Variables located at the bottom of the window.	
 		\pagebreak
+		\item Step:4	\linebreak
+		\includegraphics[height=8cm]{004.png}\\
+		\linebreak
+		Select Path, click Edit	
 		\item Step:5	\linebreak
-		\includegraphics[height=8cm]{../Images/005.png}\\
+		\includegraphics[height=8cm]{005.png}\\
 		\linebreak
 		Select New, enter the paths to the above folders which may be located in the given
 		OpenCV files, restart computer to take effect.
@@ -200,7 +240,6 @@ create a temporary mat object with the same dimensions whereas the mat object is
 to transfer the data within the image.
 This method enlarges an image, it helps with identification of objects as the windows of
 pixels processed making it easier to detect.
-\newpage
 \subsubsection{generateMat(BufferedImage image)}
 This method receives one parameter: image. The image variable is used to create a mat
 object with the same dimensions which is returned to the system and stored for
