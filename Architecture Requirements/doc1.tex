@@ -42,7 +42,7 @@
 
 % define the title
 \author{Ambitious Design}
-\title{ Software Requirements Specifications and Technology Neutral Process Design}
+\title{Software Requirements Specifications and Technology Neutral Process Design}
 \begin{document}
 \setlength{\parskip}{6pt}
 
@@ -51,17 +51,21 @@
 
 \begin{center}
 % Upper part of the page           
+
+\includegraphics{../Images/willburg.png}\\
 \textsc{\LARGE Willburg Outdoor PTY(ltd.)}\\[1.5cm]
+
+\includegraphics[height=8cm]{../Images/ad.jpg}\\
 \textsc{\Large Smart Image Identifier }\\[1.0cm]
 \textsc{\Large Version 1.0 }\\[0.5cm]
 % Title
 \HRule \\[0.4cm]
-{ \huge \bfseries  Software Requirements Specifications and Technology Neutral Process Design}\\[0.4cm]
+{ \huge \bfseries Software Requirements Specifications and Technology Neutral Process Design}\\[0.4cm]
 \HRule \\[0.4cm]
 % Author and supervisor
 \begin{minipage}{0.4\textwidth}
 \begin{flushleft} \large
-\emph{Author:}\\
+\emph{Project Team:}\\
 Stephen {Swanepoel}
 \end{flushleft}
 \end{minipage}
@@ -83,13 +87,14 @@ u12081095
 \end{flushright}
 \end{minipage}
 
-{\large \today}
 \end{center}
 \end{titlepage}
 \footnotesize
 \normalsize
 
 \renewcommand{\thesection}{\arabic{section}}
+\newpage
+\tableofcontents
 \newpage
 \begin{center}
 \textsc{\LARGE Software Requirements Specification}\\[1.5cm]
@@ -104,7 +109,7 @@ This document aims to set out the functional and non-functional requirements of 
 \subsubsection{Background}\hfill \break
 Willburg Outdoor is company that is passionate about South Africa. With this passion comes the need to protect its farmers and it animals from those who intend to harm them. The client intends to use the system to assist in fighting the following problems: animal poaching and farm attacks. 
 Willburg provides its' clients with a camera system which is interfaced with a dashboard as well as a mobile application. The cameras snap pictures when movement is detected and sends them to the Willburg server. The images are then pushed to the respective users. Willburg intend on providing its' users with real-time push notifications when a human has been detected in an image captured by a camera on their property. Smart Image Identifier will play an influential role in the prevention of both farm attacks as well as poaching.
-
+\newpage
 \section {Software architecture overview}
 
 	\begin{figure}[htb]
@@ -118,6 +123,7 @@ Willburg provides its' clients with a camera system which is interfaced with a d
 \subsection{Architecture Requirements}
 \subsubsection{Access and Integration Requirements}
 Any and all interactions by the user will be done through the Willburg Application - this is an application previously designed by the project owner for mobile platforms. All user interactions fall outside of our project scope. 
+\newpage
 \subsubsection{Quality Requirements}
 	\paragraph {Critical}
 		\subparagraph{Performance requirements and tactics}
@@ -144,7 +150,8 @@ Any and all interactions by the user will be done through the Willburg Applicati
 					\item The server should be able to process multiple images at once to ensure the real-time restriction is met for all clients of Willburg.
 					\item The system should be able to perform correctly even while under strain due to bulk processing without any loss of data and ensuring the real-time restriction is met.
 				\end{itemize}
-			\hfill \break	
+			\hfill \break
+			\newpage	
 			\textbf{Tactics}
 				\begin{enumerate}
 					\item As stated in the previous section threads and thread pooling will be used to handle multiple request within the shortest amount possible. This will ensure that system is able to handle an increase in load without impact on the performance of the system.
@@ -164,7 +171,7 @@ Any and all interactions by the user will be done through the Willburg Applicati
 					\begin{enumerate}
 						\item The system is designed to support pluggable adapters to allow remote services to use to use the system.
 					\end{enumerate}
-
+			\newpage
 			\subparagraph{Auditability}
 				\hfill \break
 				\hfill \break
@@ -282,7 +289,7 @@ This section specifies the requirements and design of the software architecture 
 					\includegraphics [scale=0.5]{../Diagrams/applicationServerResponsibiltiesAllocationZ.png}
 					\caption{The abstract components to which the architectural responsibilities are assigned}
 				\end{figure}
-			
+			\newpage
 			\paragraph {Application component concepts and constraints}
 			The central concept which will be used to specify application logic (the business processes) are the
 			concepts of:
@@ -317,7 +324,7 @@ This section specifies the requirements and design of the software architecture 
 					\item CDI (Context and Dependency Injection) is fully supported within Java-EE with dependency
 			injection requested via @Inject annotations.
 				\end {itemize}
-			
+			\newpage
 			\paragraph {Concrete realization of maintainability tactics  within Java-EE}
 			Java-EE is based on a public standard which is widely supported and hence the support for this technology is secured for the foreseeable future. The technology puts a rigorous framework in place for defining services within stateless session beans which are decoupled through interfaces/contracts. Maintainability is enhanced by dependency injection which allows for changing service providers at any level of granularity without making code changes. Furthermore the replacement of such new
 			or improved functionality can be done within a live system using hot deployment.
