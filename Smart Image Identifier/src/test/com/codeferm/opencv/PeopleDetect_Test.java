@@ -37,19 +37,15 @@ public class PeopleDetect_Test {
 	{
 		detect = null;
 	}
-	
-	
+		
 	@Test  
 	public void testGreyScale() {
 		try {
 			File input = new File("./resources/human3.jpg");
 	        BufferedImage image = ImageIO.read(input);
-	        Mat mat = detect.generateMat(image);
-			
-			mat = detect.greyScale(image, mat);
-			
-			Raster ras = image.getRaster();
-			
+	        Mat mat = detect.generateMat(image);			
+			mat = detect.greyScale(image, mat);			
+			Raster ras = image.getRaster();			
 			int elem = ras.getNumDataElements();
 			
 			assertEquals(1,elem);
@@ -57,8 +53,7 @@ public class PeopleDetect_Test {
 		catch (Exception e)
 		{
 			
-		}
-		
+		}		
 	}
 
 	@Test
@@ -78,15 +73,12 @@ public class PeopleDetect_Test {
 	}
 
 	@Test
-	public void testEnlargeImage() {
-		
+	public void testEnlargeImage() {		
 		try {
 			File input = new File("./resources/human3.jpg");
 			BufferedImage image;		
-			image = ImageIO.read(input);
-			
-			Mat mat = detect.generateMat(image);
-			
+			image = ImageIO.read(input);			
+			Mat mat = detect.generateMat(image);			
 			mat = detect.enlargeImage(image, mat);
 			
 			assertEquals(640, mat.height());
@@ -98,21 +90,15 @@ public class PeopleDetect_Test {
 	}
 
 	@Test
-	public void testGenerateMat() {
-		
+	public void testGenerateMat() {		
 		try{
 			File input = new File("./resources/human3.jpg");
 			BufferedImage image;		
-			image = ImageIO.read(input);
-		
-			Mat mat = detect.generateMat(image);
-			
+			image = ImageIO.read(input);		
+			Mat mat = detect.generateMat(image);			
 			assertEquals(false ,mat.empty());
 		}
-		catch (Exception e)
-		{
-			
-		}
+		catch (Exception e){}
 	}
 
 	@Test
@@ -125,24 +111,18 @@ public class PeopleDetect_Test {
 			File folder = new File(".\\output\\database\\normal\\");
 			File[] listOfFiles = folder.listFiles();
 			for(int i=0; i<listOfFiles.length; i++)
-			{
-				
+			{				
 				if(listOfFiles[i].getName().equals("human3.jpg"))
-				{
 					generatedImage = true;
-				}
 			}
 			assertEquals(generatedImage, true);
 			
 		}
-		catch (Exception e)
-		{
-			
-		}
+		catch (Exception e){}
 	}
 	
 	@Test
-	public void testPeopleDetection()
+	public void testPeopleDetection() throws SecurityException, IOException
 	{
 		Image img = new Image();
 		img.setURL("./resources/human3.jpg");
@@ -157,11 +137,8 @@ public class PeopleDetect_Test {
 		File[] listOfFiles = folder.listFiles();
 		for(int i=0; i<listOfFiles.length; i++)
 		{
-			
 			if(listOfFiles[i].getName().equals("human3.jpg"))
-			{
 				generatedImage = true;
-			}
 		}
 		assertEquals(generatedImage, true);
 	}
@@ -182,21 +159,4 @@ public class PeopleDetect_Test {
 	{
 		fail("Not yet implemented");
 	}
-
-	@Test
-	public void testProcessVideo() {
-		try {
-			
-			detect.processVideo("./resources/walking.avi");
-			File f = new File("./output/test.avi");
-			
-			assertEquals(true, f.exists());
-			
-		}
-		catch (Exception e)
-		{
-			
-		}
-	}
-
 }

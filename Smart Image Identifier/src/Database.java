@@ -82,19 +82,15 @@ public class Database {
             String date = obj.get("date").toString();
             String from = obj.get("from").toString();
             String ID = obj.get("_id").toString();
-            String encoding = obj2.get("attachments").toString().substring(18, obj2.get("attachments").toString().length()-4);
-            
+            String encoding = obj2.get("attachments").toString().substring(18, obj2.get("attachments").toString().length()-4);            
             BufferedImage img = getImage(encoding.getBytes());
             //Write the image to a file
             File outputfile = new File("./resources/database/"+ ID +".jpg");
-            ImageIO.write(img, "jpg", outputfile);            
-            
-            
+            ImageIO.write(img, "jpg", outputfile);
             image.setURL("./resources/database/"+ ID +".jpg");
             image.setID(ID);
             
-            new PeopleDetection().ProcessImage(new PeopleDetectionRequest(image));          
-            
+            new PeopleDetection().ProcessImage(new PeopleDetectionRequest(image));  
         }
     }	
 	

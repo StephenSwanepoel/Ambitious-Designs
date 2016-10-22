@@ -199,22 +199,17 @@ public class PeopleDetectImplementation {
 	    	Mat mat2 = greyScale(image,mat);	
 	    	Mat mat3 = equalization(image,mat2);
 	    	
-logger.log(Level.INFO, "Initialising Tests");
+	    	logger.log(Level.INFO, "Initialising Tests");
 	    	
 	    	//Test 1 - Resize image + normal 
-	    	//logger.log(Level.INFO, "Standard image: " + successfulTests[0]);
     		successfulTests[0] = processImage(mat, image, data, url, 'N');
     		
-    		//Test 2 - Resize image + greyscale 
-    		//logger.log(Level.INFO, "Greyscaled image: " + successfulTests[1]);   
+    		//Test 2 - Resize image + greyscale  
     		successfulTests[1] = processImage(mat2, image, data, url, 'G');
     		    		   		
-    		//Test 3 - Resize image + equalisation   		
-    		//logger.log(Level.INFO, "Equalised image: " + successfulTests[2]);  
+    		//Test 3 - Resize image + equalisation   		  
     		successfulTests[2] = processImage(mat3, image, data, url, 'E'); 
-    		    	
-    		//logger.log(Level.INFO, "Tests completed...");
-    		
+    		    	    		
     		int count = 0;
     		for (int i=0; i<3; i++){
     			if (successfulTests[i] == true)
@@ -257,10 +252,8 @@ logger.log(Level.INFO, "Initialising Tests");
      * @param data provides pixel writing capabilities - image.getRaster()
      * @throws IOException
      */
-     boolean processImage(Mat mat, BufferedImage image, byte[] data, String url, char type) throws IOException{
-    	 
-    	try{    
-	        	        
+     boolean processImage(Mat mat, BufferedImage image, byte[] data, String url, char type) throws IOException{    	 
+    	try{    	        	        
 	        //Initialise and set hog descriptor to "people detector"
 	        final HOGDescriptor hog = new HOGDescriptor();
 	    	hog.setSVMDetector(HOGDescriptor.getDefaultPeopleDetector());
@@ -302,55 +295,6 @@ logger.log(Level.INFO, "Initialising Tests");
     }
     
     /**
-     * Method which processes a video for human detection
-     * @param url a String containing the location of an image
-     */
-    public void processVideo(String url){
-    	
-    	final String outputFile = "./output/test.avi";    	    	    	
-    	final VideoCapture videoCapture = new VideoCapture(url);
-        final Size frameSize = new Size((int) videoCapture.get(Videoio.CAP_PROP_FRAME_WIDTH),
-                (int) videoCapture.get(Videoio.CAP_PROP_FRAME_HEIGHT));    
-        final FourCC fourCC = new FourCC("X264");
-        final VideoWriter videoWriter = new VideoWriter(outputFile, fourCC.toInt(),
-                videoCapture.get(Videoio.CAP_PROP_FPS), frameSize, true);
-        final Mat mat = new Mat();
-        final HOGDescriptor hog = new HOGDescriptor();
-        final MatOfFloat descriptors = HOGDescriptor.getDefaultPeopleDetector();
-        hog.setSVMDetector(descriptors);
-        final MatOfRect foundLocations = new MatOfRect();
-        final MatOfDouble foundWeights = new MatOfDouble();
-        final Size winStride = new Size(8, 8);
-        final Size padding = new Size(32, 32);
-        final Scalar rectColor = new Scalar(0, 255, 0);
-        final long startTime = System.currentTimeMillis();
-                
-        while (videoCapture.read(mat)) {
-            hog.detectMultiScale(mat, foundLocations, foundWeights, 0.0, winStride, padding, 1.025, 2.0, false);
-            if (foundLocations.rows() > 0) {
-                final List<Rect> rectList = foundLocations.toList();
-                for (final Rect rect : rectList) {
-                    //Draw rectangle around found object
-                    Imgproc.rectangle(mat, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), rectColor, 5);   
-                }
-            }
-
-            videoWriter.write(mat);
-        }
-        final long estimatedTime = System.currentTimeMillis() - startTime;
-        final double seconds = (double) estimatedTime / 1000;
-        logger.log(Level.INFO, String.format("elapsed time: %4.2f seconds", seconds));
-        
-        //Release native memory
-        videoCapture.release();
-        videoWriter.release();
-        descriptors.release();
-        foundLocations.release();
-        foundWeights.release();
-        mat.release();
-    }
-
-    /**
      * Suppress default constructor for noninstantiability.
      */
     public PeopleDetectImplementation(FileHandler fh) {    	
@@ -358,35 +302,12 @@ logger.log(Level.INFO, "Initialising Tests");
 		SimpleFormatter formatter = new SimpleFormatter();  
 		fh.setFormatter(formatter);
     }
+    
+    public PeopleDetectImplementation() {    	
+        
+    }
 
 	public void processImage(String url) throws IOException {
 		
 	}
-    
-    /*public static void main(final String... args) throws IOException {
-    	
-        String url = null;        
-        // Check how many arguments were passed in
-        if (args.length == 0) {
-            // If no arguments were passed then default to local file
-        	url = "./resources/walking.avi";
-        } else {
-        	url = args[0];
-        }
-                       
-        // Custom logging properties via class loader
-        try {
-            LogManager.getLogManager()
-                    .readConfiguration(PeopleDetect.class.getClassLoader().getResourceAsStream("logging.properties"));
-        } catch (SecurityException | IOException e) {
-            e.printStackTrace();
-        }
-        logger.log(Level.INFO, String.format("OpenCV %s", Core.VERSION));
-        logger.log(Level.INFO, String.format("Input file: %s", url));
-        
-        if (url.contains(".jpg") == true)
-            processImage(url);
-        else
-        	processVideo(url);
-    }*/
 }
