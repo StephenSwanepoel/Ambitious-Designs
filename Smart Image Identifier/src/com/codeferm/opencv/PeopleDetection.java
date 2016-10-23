@@ -18,7 +18,7 @@ public class PeopleDetection {
 	 		
 		try {
 			
-			if(new PeopleDetectImplementation(fh).runTests(request.getImage().getURL()))
+			if(new PeopleDetectImplementation(fh).runTests(request.getImage()))
 				return new PeopleDetectionResponse();
 			else
 				return null;

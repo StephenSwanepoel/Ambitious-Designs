@@ -89,6 +89,7 @@ public class Database {
             ImageIO.write(img, "jpg", outputfile);
             image.setURL("./resources/database/"+ ID +".jpg");
             image.setID(ID);
+            image.setBufferedImage(img);
             
             new PeopleDetection().ProcessImage(new PeopleDetectionRequest(image));  
         }

@@ -104,8 +104,13 @@ public class PeopleDetect_Test {
 	@Test
 	public void testGenerateImage() {
 		try{
-			String url = "./resources/human3.jpg";			
-			detect.runTests(url);
+			String url = "./resources/human3.jpg";	
+			File input = new File(url);
+	        BufferedImage img = ImageIO.read(input);
+			Image image = new Image();
+			image.setBufferedImage(img);			
+			
+			detect.runTests(image);
 			Boolean generatedImage = false;
 			
 			File folder = new File(".\\output\\database\\normal\\");

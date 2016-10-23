@@ -162,8 +162,7 @@ The system will be used to provide real-time security alerts when a human is det
 		
 		
 	\end{itemize}
-	
-	
+		
 	\subsubsection{Setting system environment variables}
 	Setting of environment variables is necessary for your system to detect the OpenCV framework
 	which was used for developing Smart Image Identifier.
@@ -195,6 +194,19 @@ The system will be used to provide real-time security alerts when a human is det
 		Select New, enter the paths to the above folders which may be located in the given
 		OpenCV files, restart computer to take effect.
 	\end{itemize}
+	\pagebreak
+	\subsubsection{MongoDB}
+	MongoDB is the database which was used as it conforms to Willburg's current software requirements. \linebreak
+	MongoDB can be downloaded from \href{https://www.mongodb.com/download-center#community}{here}.
+	Install using the installation wizard. \linebreak
+	
+	\subsubsection{Importing .bson file}
+	Once you have successfully installed MongoDB, navigate to the /bin folder in your installation directory - eg. "C:/Program Files/MongoDB/Server/3.2/bin" and place a copy of the .bson file (which maybe found in "Smart Image Identifier/lib/")  into MongoDB's bin folder.
+	\linebreak\linebreak
+	 Navigate to the /bin folder in your installation directory - eg. "C:/Program Files/MongoDB/Server/3.2/bin" through Windows Command Prompt and execute the following command: \linebreak
+	 "mongoimport -d COS301 -c Willburg -j 4 \textless  \ incomingemails.bson". 
+	 \linebreak This will import the database dump provided by Willburg so that Smart Image Identifier is capable of providing output.
+		
 	
 	\section{Using The System}
 	\subsection{OpenCV}

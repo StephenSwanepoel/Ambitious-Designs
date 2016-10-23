@@ -182,33 +182,34 @@ public class PeopleDetectImplementation {
      * @param url a String containing the location of an image
      * @throws IOException
      */
-    public Boolean runTests(String url) throws IOException{
+    public Boolean runTests(Image image) throws IOException{
     	
     	pop = new ImagePopupImplementation(); 
     	
     	try{
     		final long startTime = System.currentTimeMillis();
     		
-    		File input = new File(url);
-	        BufferedImage image = ImageIO.read(input);
-	        Mat mat = generateMat(image);
-	        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+    		//File input = new File(url);
+	        BufferedImage img = image.getBufferedImage();
+    		
+	        Mat mat = generateMat(img);
+	        byte[] data = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
 	        
 	        //Resize image	    	
-	        mat = enlargeImage(image,mat);	    	
-	    	Mat mat2 = greyScale(image,mat);	
-	    	Mat mat3 = equalization(image,mat2);
+	        mat = enlargeImage(img,mat);	    	
+	    	Mat mat2 = greyScale(img,mat);	
+	    	Mat mat3 = equalization(img,mat2);
 	    	
 	    	logger.log(Level.INFO, "Initialising Tests");
 	    	
 	    	//Test 1 - Resize image + normal 
-    		successfulTests[0] = processImage(mat, image, data, url, 'N');
+    		successfulTests[0] = processImage(mat, img, data, image.getURL(), 'N');
     		
     		//Test 2 - Resize image + greyscale  
-    		successfulTests[1] = processImage(mat2, image, data, url, 'G');
+    		successfulTests[1] = processImage(mat2, img, data, image.getURL(), 'G');
     		    		   		
     		//Test 3 - Resize image + equalisation   		  
-    		successfulTests[2] = processImage(mat3, image, data, url, 'E'); 
+    		successfulTests[2] = processImage(mat3, img, data, image.getURL(), 'E'); 
     		    	    		
     		int count = 0;
     		for (int i=0; i<3; i++){
