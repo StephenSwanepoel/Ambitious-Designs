@@ -114,7 +114,7 @@ Willburg provides its' clients with a camera system which is interfaced with a d
 
 	\begin{figure}[htb]
 		\centering
-		\includegraphics [height= 8cm, width=10cm]{../Diagrams/SystemOverview.png}
+		\includegraphics [height= 8cm, width=15cm]{../Diagrams/SystemOverview.png}
 		\caption{A high-level overview of the software architecture of the Smart Image Identifier}
 	\end{figure}
 
@@ -217,9 +217,6 @@ Any and all interactions by the user will be done through the Willburg Applicati
 					\item The system must be thoroughly tested on the server side, to ensure it will not cause faults or problems.
 					\item The notification warning users will receive must be sent out immediately after the image has been processed in a real-time manner.
 				\end{itemize}
-		
-			
-\subsubsection{Architectural responsibilities}
 
 
 \subsubsection{Architectural constraints}
@@ -244,97 +241,12 @@ design for the first level of granularity. It includes the allocation of archite
 architectural components, any tactics which should be used at the current level of granularity to
 address quality requirements
 
-\subsubsection {Architectural components addressing architectural responsibilities}
-	\begin{figure}[htb]
-		\centering
-		\includegraphics [scale=0.5]{../Diagrams/applicationServerResponsibiltiesAllocationZ.png}
-		\caption{PlaceHolder}
-	\end{figure}
-
 \subsubsection {Infrastructure}
 The layered architectural pattern provides an infrustructure which limits access of components within one layer to components which are either in the same or the next lower level layer. One of the strengths is that a layer can be easily replaced. In particular, one can add further access channels without changing any lower level layers within the software system.
 
 
 \section {Image Processing System Architecture}
 This section specifies the requirements and design of the software architecture second level of granularity. The image processing service is responsible for the manipulation of an image and the detection of a human.
-
-	\subsection {Application server}
-	This section specifies the the software architecture requirements and design for the application server
-		\subsubsection {Software architecture requirements}
-		The architectural requirements include the refined quality requirements and the architectural responsibilities. The architectural constraints for this lower level component are the same as for the system as a whole.
-		
-			\paragraph {Access and Integration Requirements}
-				\subparagraph {Access Channel Requirements}
-					The application server will address the first interaction between the existing server and the application. 
-				\subparagraph {Integration Channel Requirements}
-					The server application must integrate with the image procsessing system in order for images to be pulled from the server.	
-			
-			\FloatBarrier
-			\paragraph {Architectural responsiblities}
-				\hfill \break
-				The architectural responsibilities of the 	application server
-				\begin{figure}[H]
-					\centering
-					\includegraphics  [scale=0.5]{../Diagrams/applicationServerResponsibiltiesZ.png}
-					\caption{The architectural responsibilities of the application server}
-				\end{figure}		
-		
-		\subsubsection {Architecture design}	
-			\FloatBarrier	
-			\paragraph {Architectural components}
-			\hfill \break
-				The architectural responsibility allocation the application server			
-				\begin{figure}[htb]
-					\centering
-					\includegraphics [scale=0.5]{../Diagrams/applicationServerResponsibiltiesAllocationZ.png}
-					\caption{The abstract components to which the architectural responsibilities are assigned}
-				\end{figure}
-			\newpage
-			\paragraph {Application component concepts and constraints}
-			The central concept which will be used to specify application logic (the business processes) are the
-			concepts of:
-				\begin {itemize}
-					\item a \textit{service contract} which encodes the requirements for a service
-					\item a \textit{service} which encodes the concrete implementation of a service. 
-				\end {itemize}
-			These services which encapsulate the processes will be constrained to be stateless, i.e. no state
-			is maintained across service requests.
-			Long living state is maintained in domain objects which are typically persisted and which should
-			not have any business logic.
-			
-			\paragraph {Frameworks and technologies}
-			\hfill \break
-			The Spring Framework is an application framework and inversion of control container for the Java platform. The framework's core features can be used by any Java application, but there are extensions for building web applications on top of the Java EE platform. Although the framework does not impose any specific programming model, it has become popular in the Java community as an alternative to, replacement for, or even addition to the Enterprise JavaBeans (EJB) model. The Spring Framework is open source.
-			
-				\subparagraph {Concrete realization of architectural components}
-				\hfill \break
-				The Java-EE reference architecture addresses largely all the architectural responsibilities assigned to the application server.
-				
-				\subparagraph {Tactics}
-				\hfill \break
-				With the exception of full aspect-oriented programming, Java-EE-7 supports all architectural tactics specified in the software architecture design for the application server.
-				
-			\paragraph {Concrete realization of flexibility tactics  within Java-EE}
-			\hfill \break
-			Java-EE supports
-				\begin {itemize}
-					\item Java-EE is a component-based framework requiring decoupling through interfaces/contracts.
-					\item Hot-deployment is supported by most application servers including the most widely used
-			open-source application servers like JBoss and Glassfish.
-					\item CDI (Context and Dependency Injection) is fully supported within Java-EE with dependency
-			injection requested via @Inject annotations.
-				\end {itemize}
-			\newpage
-			\paragraph {Concrete realization of maintainability tactics  within Java-EE}
-			Java-EE is based on a public standard which is widely supported and hence the support for this technology is secured for the foreseeable future. The technology puts a rigorous framework in place for defining services within stateless session beans which are decoupled through interfaces/contracts. Maintainability is enhanced by dependency injection which allows for changing service providers at any level of granularity without making code changes. Furthermore the replacement of such new
-			or improved functionality can be done within a live system using hot deployment.
-			
-			\paragraph {Concrete realization of reliability tactics  within Java-EE}
-			\hfill \break
-			Java-EE uses thread-pooling, object-pooling, connection-pooling and clustering to improve scalability.
-
-
-
 
 	\subsection {Image processing}
 	This section specifies the the software architecture requirements and design for the image processing application.
@@ -343,7 +255,7 @@ This section specifies the requirements and design of the software architecture 
 		
 			\paragraph {Access and Integration Requirements}
 				\subparagraph {Access Channel Requirements}
-					The image processing application will address the manipulation of images and identification of humans.
+					The  image processing application will address the first interaction between the existing server and the application.					The image processing application wil alsol address the manipulation of images and identification of humans.
 				\subparagraph {Integration Channel Requirements}
 					The  image processing application must integrate with the image procsessing system in order for images to be processed.	
 			
@@ -353,7 +265,7 @@ This section specifies the requirements and design of the software architecture 
 				The architectural responsibilities of the 	application server
 				\begin{figure}[H]
 					\centering
-					\includegraphics  [scale=0.5]{../Diagrams/applicationServerResponsibiltiesZ.png}
+					\includegraphics  [scale=0.8]{../Diagrams/applicationServerResponsibiltiesZ.jpg}
 					\caption{The architectural responsibilities of the image processing application}
 				\end{figure}		
 		
@@ -368,6 +280,20 @@ This section specifies the requirements and design of the software architecture 
 					\caption{The abstract components to which the  image processing applicatio}
 				\end{figure}
 			
+			\newpage
+			\paragraph {Application component concepts and constraints}
+			The central concept which will be used to specify application logic (the business processes) are the
+			concepts of:
+				\begin {itemize}
+					\item a \textit{service contract} which encodes the requirements for a service
+					\item a \textit{service} which encodes the concrete implementation of a service. 
+				\end {itemize}
+			These services which encapsulate the processes will be constrained to be stateless, i.e. no state
+			is maintained across service requests.
+			Long living state is maintained in domain objects which are typically persisted and which should
+			not have any business logic.
+
+
 			\paragraph {Frameworks and technologies}
 			\hfill \break
 			OpenCV (Open Source Computer Vision) is a library of programming functions mainly aimed at real-time computer vision. The library is cross-platform and free for use under the open-source BSD license.
